@@ -148,7 +148,7 @@ def get_args_parser():
     parser.add_argument('--nb_classes', default=1000, type=int, help='number of the classification types')
     parser.add_argument('--layer_scale_init_value', default=1e-6, type=float, help="Layer scale initial values")
     parser.add_argument('--head_init_scale', default=1.0, type=float, help='classifier head initial scale, typically adjusted in fine-tuning')
-    parser.add_argument('--kernel_size', nargs="*", type=int, default = [31,29,27,13,5], help='kernel size (default: [31,29,27,13,5], the last number is N)')
+    parser.add_argument('--kernel_size', nargs="*", type=int, default = [7,7,7,7,5], help='kernel size (default: [31,29,27,13,5], the last number is N)')
     parser.add_argument('--width_factor', type=float, default=1, help='set the width factor of the model')
     parser.add_argument('--LoRA', type=str2bool, default=False, help='Enabling low rank path')
     return parser
@@ -202,11 +202,11 @@ def train_dino(args):
         teacher = torchvision_models.__dict__[args.arch]()
         embed_dim = student.fc.weight.shape[1]
     elif 'SLaK' in args.arch:
-        student = create_model(args.model,pretrained=False,num_classes=args.nb_classes,
+        student = create_model(args.arch, pretrained=False,num_classes=args.nb_classes,
             drop_path_rate=args.drop_path_rate,layer_scale_init_value=args.layer_scale_init_value,
             head_init_scale=args.head_init_scale,kernel_size=args.kernel_size,width_factor=args.width_factor,
             LoRA=args.LoRA)
-        teacher = create_model(args.model, pretrained=False, num_classes=args.nb_classes,
+        teacher = create_model(args.arch, pretrained=False, num_classes=args.nb_classes,
             drop_path_rate=args.drop_path_rate, layer_scale_init_value=args.layer_scale_init_value,
             head_init_scale=args.head_init_scale, kernel_size=args.kernel_size,
             width_factor=args.width_factor,
