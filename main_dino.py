@@ -34,9 +34,26 @@ import utils
 import vision_transformer as vits
 from vision_transformer import DINOHead
 
+from timm.models import create_model
+import models.SLaK
+
 torchvision_archs = sorted(name for name in torchvision_models.__dict__
     if name.islower() and not name.startswith("__")
     and callable(torchvision_models.__dict__[name]))
+
+def str2bool(v):
+    """
+    Converts string to bool type; enables command line
+    arguments in the format of '--arg1 true --arg2 false'
+    """
+    if isinstance(v, bool):
+        return v
+    if v.lower() in ('yes', 'true', 't', 'y', '1'):
+        return True
+    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+        return False
+    else:
+        raise argparse.ArgumentTypeError('Boolean value expected.')
 
 def get_args_parser():
     parser = argparse.ArgumentParser('DINO', add_help=False)
@@ -126,6 +143,14 @@ def get_args_parser():
     parser.add_argument("--dist_url", default="env://", type=str, help="""url used to set up
         distributed training; see https://pytorch.org/docs/stable/distributed.html""")
     parser.add_argument("--local_rank", default=0, type=int, help="Please ignore and do not set this argument.")
+
+    # SLaK
+    parser.add_argument('--nb_classes', default=1000, type=int, help='number of the classification types')
+    parser.add_argument('--layer_scale_init_value', default=1e-6, type=float, help="Layer scale initial values")
+    parser.add_argument('--head_init_scale', default=1.0, type=float, help='classifier head initial scale, typically adjusted in fine-tuning')
+    parser.add_argument('--kernel_size', nargs="*", type=int, default = [31,29,27,13,5], help='kernel size (default: [31,29,27,13,5], the last number is N)')
+    parser.add_argument('--width_factor', type=float, default=1, help='set the width factor of the model')
+    parser.add_argument('--LoRA', type=str2bool, default=False, help='Enabling low rank path')
     return parser
 
 
@@ -176,6 +201,17 @@ def train_dino(args):
         student = torchvision_models.__dict__[args.arch]()
         teacher = torchvision_models.__dict__[args.arch]()
         embed_dim = student.fc.weight.shape[1]
+    elif 'SLaK' in args.arch:
+        student = create_model(args.model,pretrained=False,num_classes=args.nb_classes,
+            drop_path_rate=args.drop_path_rate,layer_scale_init_value=args.layer_scale_init_value,
+            head_init_scale=args.head_init_scale,kernel_size=args.kernel_size,width_factor=args.width_factor,
+            LoRA=args.LoRA)
+        teacher = create_model(args.model, pretrained=False, num_classes=args.nb_classes,
+            drop_path_rate=args.drop_path_rate, layer_scale_init_value=args.layer_scale_init_value,
+            head_init_scale=args.head_init_scale, kernel_size=args.kernel_size,
+            width_factor=args.width_factor,
+            LoRA=args.LoRA)
+        embed_dim = student.head.weight.shape[1]
     else:
         print(f"Unknow architecture: {args.arch}")
 
