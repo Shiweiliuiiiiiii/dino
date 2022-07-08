@@ -228,6 +228,9 @@ def train_dino(args):
     )
     # move networks to gpu
     student, teacher = student.cuda(), teacher.cuda()
+    # print models for check
+    print(f"Teacher Model is {teacher}" )
+    print(f"Student Model is {student}" )
     # synchronize batch norms (if any)
     if utils.has_batchnorms(student):
         student = nn.SyncBatchNorm.convert_sync_batchnorm(student)
