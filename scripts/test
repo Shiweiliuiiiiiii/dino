@@ -13,8 +13,8 @@
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
 source activate LoRA
 
-python -m torch.distributed.launch --nproc_per_node=4 main_dino.py \
---arch SLaK_tiny --kernel-size 7 7 7 7 100 --epochs 300 --teacher_temp 0.07 --warmup_teacher_temp_epochs 30 \
+python -m torch.distributed.launch --nproc_per_node=1 main_dino.py \
+--arch SLaK_tiny --kernel_size 7 7 7 7 100 --epochs 300 --teacher_temp 0.07 --warmup_teacher_temp_epochs 30 \
 --data_path /projects/2/managed_datasets/imagenet/train --output_dir /projects/0/prjste21060/projects/dino/test
 
 
