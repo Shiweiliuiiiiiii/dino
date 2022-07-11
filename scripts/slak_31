@@ -14,8 +14,8 @@ source /home/sliu/miniconda3/etc/profile.d/conda.sh
 source activate LoRA
 
 python -m torch.distributed.launch --nproc_per_node=4 main_dino.py \
---arch SLaK_tiny --kernel_size 31 29 27 13 5 --epochs 100 --LoRA True \
---data_path /projects/2/managed_datasets/imagenet/train --output_dir /projects/0/prjste21060/projects/dino/dino_slak_51/
+--arch SLaK_tiny --kernel_size 31 29 27 13 5 --epochs 100 --LoRA True --batch_size_per_gpu 128 \
+--data_path /projects/2/managed_datasets/imagenet/train --output_dir /projects/0/prjste21060/projects/dino/dino_slak_31/
 
 
 source deactivate
