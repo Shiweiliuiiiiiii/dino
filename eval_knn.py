@@ -25,7 +25,22 @@ from torchvision import models as torchvision_models
 
 import utils
 import vision_transformer as vits
+from timm.models import create_model
+import models.SLaK
 
+def str2bool(v):
+    """
+    Converts string to bool type; enables command line
+    arguments in the format of '--arg1 true --arg2 false'
+    """
+    if isinstance(v, bool):
+        return v
+    if v.lower() in ('yes', 'true', 't', 'y', '1'):
+        return True
+    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+        return False
+    else:
+        raise argparse.ArgumentTypeError('Boolean value expected.')
 
 def extract_feature_pipeline(args):
     # ============ preparing data ... ============
@@ -61,6 +76,11 @@ def extract_feature_pipeline(args):
         print(f"Model {args.arch} {args.patch_size}x{args.patch_size} built.")
     elif "xcit" in args.arch:
         model = torch.hub.load('facebookresearch/xcit:main', args.arch, num_classes=0)
+    elif 'SLaK' in args.arch:
+        model = create_model(args.arch, pretrained=False,num_classes=args.nb_classes,
+            drop_path_rate=args.drop_path_rate,layer_scale_init_value=args.layer_scale_init_value,
+            head_init_scale=args.head_init_scale,kernel_size=args.kernel_size,width_factor=args.width_factor,
+            LoRA=args.LoRA)
     elif args.arch in torchvision_models.__dict__.keys():
         model = torchvision_models.__dict__[args.arch](num_classes=0)
         model.fc = nn.Identity()
@@ -211,6 +231,15 @@ if __name__ == '__main__':
         distributed training; see https://pytorch.org/docs/stable/distributed.html""")
     parser.add_argument("--local_rank", default=0, type=int, help="Please ignore and do not set this argument.")
     parser.add_argument('--data_path', default='/path/to/imagenet/', type=str)
+
+    # SLaK
+    parser.add_argument('--drop_path_rate', type=float, default=0.1, help="stochastic depth rate")
+    parser.add_argument('--nb_classes', default=1000, type=int, help='number of the classification types')
+    parser.add_argument('--layer_scale_init_value', default=1e-6, type=float, help="Layer scale initial values")
+    parser.add_argument('--head_init_scale', default=1.0, type=float, help='classifier head initial scale, typically adjusted in fine-tuning')
+    parser.add_argument('--kernel_size', nargs="*", type=int, default = [7,7,7,7,5], help='kernel size (default: [31,29,27,13,5], the last number is N)')
+    parser.add_argument('--width_factor', type=float, default=1.0, help='set the width factor of the model')
+    parser.add_argument('--LoRA', type=str2bool, default=False, help='Enabling low rank path')
     args = parser.parse_args()
 
     utils.init_distributed_mode(args)
