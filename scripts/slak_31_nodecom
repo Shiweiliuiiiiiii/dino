@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=dino_slak_31
+#SBATCH --job-name=dino_slak_31_nocom
 #SBATCH -p gpu
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
@@ -8,14 +8,14 @@
 #SBATCH -t 3-11:59:59
 #SBATCH --exclusive
 #SBATCH --cpus-per-task=72
-#SBATCH -o dino_slak_31.out
+#SBATCH -o dino_slak_31_nocom.out
 
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
 source activate LoRA
 
 python -m torch.distributed.launch --nproc_per_node=4 main_dino.py \
---arch SLaK_tiny --kernel_size 31 29 27 13 5 --epochs 100 --LoRA True --batch_size_per_gpu 64 \
---data_path /projects/2/managed_datasets/imagenet/train --output_dir /projects/0/prjste21060/projects/dino/dino_slak_31/
+--arch SLaK_tiny --kernel_size 31 29 27 13 5 --epochs 100 --batch_size_per_gpu 64 \
+--data_path /projects/2/managed_datasets/imagenet/train --output_dir /projects/0/prjste21060/projects/dino/dino_slak_31_nodecom/
 
 
 source deactivate

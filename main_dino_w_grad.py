@@ -148,7 +148,8 @@ def get_args_parser():
     parser.add_argument('--nb_classes', default=1000, type=int, help='number of the classification types')
     parser.add_argument('--layer_scale_init_value', default=1e-6, type=float, help="Layer scale initial values")
     parser.add_argument('--head_init_scale', default=1.0, type=float, help='classifier head initial scale, typically adjusted in fine-tuning')
-    parser.add_argument('--kernel_size', nargs="*", type=int, default = [7,7,7,7,5], help='kernel size (default: [31,29,27,13,5], the last number is N)')
+    parser.add_argument('--kernel_size_s', nargs="*", type=int, default = [7,7,7,7,100], help='kernel size (default: [31,29,27,13,5], the last number is N)')
+    parser.add_argument('--kernel_size_t', nargs="*", type=int, default = [9,9,9,9,100], help='kernel size (default: [31,29,27,13,5], the last number is N)')
     parser.add_argument('--width_factor', type=float, default=1, help='set the width factor of the model')
     parser.add_argument('--LoRA', type=str2bool, default=False, help='Enabling low rank path')
     parser.add_argument('--bn', type=str2bool, default=True, help='add batch norm layer after each path')
@@ -205,13 +206,13 @@ def train_dino(args):
     elif 'SLaK' in args.arch:
         student = create_model(args.arch, pretrained=False,num_classes=args.nb_classes,
             drop_path_rate=args.drop_path_rate,layer_scale_init_value=args.layer_scale_init_value,
-            head_init_scale=args.head_init_scale,kernel_size=args.kernel_size,width_factor=args.width_factor,
+            head_init_scale=args.head_init_scale,kernel_size=args.kernel_size_s,width_factor=args.width_factor,
             LoRA=args.LoRA,
             bn=args.bn
             )
         teacher = create_model(args.arch, pretrained=False, num_classes=args.nb_classes,
             drop_path_rate=args.drop_path_rate, layer_scale_init_value=args.layer_scale_init_value,
-            head_init_scale=args.head_init_scale, kernel_size=args.kernel_size,
+            head_init_scale=args.head_init_scale, kernel_size=args.kernel_size_t,
             width_factor=args.width_factor,
             LoRA=args.LoRA,
             bn=args.bn
@@ -248,12 +249,13 @@ def train_dino(args):
         # teacher_without_ddp and teacher are the same thing
         teacher_without_ddp = teacher
     student = nn.parallel.DistributedDataParallel(student, device_ids=[args.gpu])
+    teacher = nn.parallel.DistributedDataParallel(teacher_without_ddp, device_ids=[args.gpu])
     # teacher and student start with the same weights
-    teacher_without_ddp.load_state_dict(student.module.state_dict())
-    # there is no backpropagation through the teacher, so no need for gradients
-    for p in teacher.parameters():
-        p.requires_grad = False
-    print(f"Student and Teacher are built: they are both {args.arch} network.")
+    # teacher_without_ddp.load_state_dict(student.module.state_dict())
+    # # there is no backpropagation through the teacher, so no need for gradients
+    # for p in teacher.parameters():
+    #     p.requires_grad = False
+    # print(f"Student and Teacher are built: they are both {args.arch} network.")
 
     # ============ preparing loss ... ============
     dino_loss = DINOLoss(
@@ -266,7 +268,7 @@ def train_dino(args):
     ).cuda()
 
     # ============ preparing optimizer ... ============
-    params_groups = utils.get_params_groups(student)
+    params_groups = utils.get_params_groups(student, teacher)
     if args.optimizer == "adamw":
         optimizer = torch.optim.AdamW(params_groups)  # to use with ViTs
     elif args.optimizer == "sgd":
@@ -298,7 +300,7 @@ def train_dino(args):
     # ============ optionally resume training ... ============
     to_restore = {"epoch": 0}
     utils.restart_from_checkpoint(
-        os.path.join(args.output_dir, "checkpoint.pth"),
+        os.path.join(args.output_dir, "checkpoint0060.pth"),
         run_variables=to_restore,
         student=student,
         teacher=teacher,
@@ -388,10 +390,10 @@ def train_one_epoch(student, teacher, teacher_without_ddp, dino_loss, data_loade
             fp16_scaler.update()
 
         # EMA update for the teacher
-        with torch.no_grad():
-            m = momentum_schedule[it]  # momentum parameter
-            for param_q, param_k in zip(student.module.parameters(), teacher_without_ddp.parameters()):
-                param_k.data.mul_(m).add_((1 - m) * param_q.detach().data)
+        # with torch.no_grad():
+        #     m = momentum_schedule[it]  # momentum parameter
+        #     for param_q, param_k in zip(student.module.parameters(), teacher_without_ddp.parameters()):
+        #         param_k.data.mul_(m).add_((1 - m) * param_q.detach().data)
 
         # logging
         torch.cuda.synchronize()
