@@ -1,0 +1,31 @@
+#!/bin/bash
+#SBATCH --job-name=dino_swin_tiny_100
+#SBATCH -p gpu
+#SBATCH -N 1
+#SBATCH --ntasks-per-node=1
+#SBATCH --gpus-per-node=4
+#SBATCH --gpus=4
+#SBATCH -t 3-11:59:59
+#SBATCH --exclusive
+#SBATCH --cpus-per-task=72
+#SBATCH -o dino_swin_tiny_100.out
+
+source /home/sliu/miniconda3/etc/profile.d/conda.sh
+source activate LoRA
+
+DATA_PATH=/projects/2/managed_datasets/imagenet/
+PROJ_PATH=your_esvit_project_path
+OUT_PATH=/projects/0/prjste21060/projects/dino/dino_swin_tiny_100/
+
+python -m torch.distributed.launch --nproc_per_node=1 main_esvit.py --arch swin_tiny \
+--data_path $DATA_PATH/train --output_dir $OUT_PATH --batch_size_per_gpu 64 --epochs 100 \
+--warmup_epochs 10  --norm_last_layer True \
+--use_dense_prediction True --cfg experiments/imagenet/swin/swin_tiny_patch4_window7_224.yaml
+
+python -m torch.distributed.launch --nproc_per_node=1 main_esvit.py --arch swin_tiny \
+--data_path /projects/2/managed_datasets/imagenet/train \
+--output_dir /projects/0/prjste21060/projects/dino/dino_swin_tiny_100/ --batch_size_per_gpu 128 --epochs 100 \
+--warmup_epochs 10 --cfg experiments/imagenet/swin/swin_tiny_patch4_window7_224.yaml
+
+
+ source deactivate

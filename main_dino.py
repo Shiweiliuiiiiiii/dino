@@ -37,6 +37,10 @@ from vision_transformer import DINOHead
 from timm.models import create_model
 import models.SLaK
 
+from models import build_model
+from config import config
+from config import update_config
+
 torchvision_archs = sorted(name for name in torchvision_models.__dict__
     if name.islower() and not name.startswith("__")
     and callable(torchvision_models.__dict__[name]))
@@ -60,7 +64,9 @@ def get_args_parser():
 
     # Model parameters
     parser.add_argument('--arch', default='vit_small', type=str,
-        choices=['vit_tiny', 'vit_small', 'vit_base', 'xcit', 'deit_tiny', 'deit_small', 'SLaK_tiny', 'SLaK_small', 'SLaK_base', 'SLaK_large'] \
+        choices=['vit_tiny', 'vit_small', 'vit_base', 'xcit', 'deit_tiny', 'deit_small',
+                 'SLaK_tiny', 'SLaK_small', 'SLaK_base', 'SLaK_large',
+                 'swin_tiny','swin_small', 'swin_base', 'swin_large', 'swin'] \
                 + torchvision_archs + torch.hub.list("facebookresearch/xcit:main"),
         help="""Name of architecture to train. For quick experiments with ViTs,
         we recommend using vit_tiny or vit_small.""")
@@ -80,6 +86,9 @@ def get_args_parser():
         We recommend setting a higher value with small batches: for example use 0.9995 with batch size of 256.""")
     parser.add_argument('--use_bn_in_head', default=False, type=utils.bool_flag,
         help="Whether to use batch normalizations in projection head (Default: False)")
+
+    parser.add_argument('--use_dense_prediction', default=False, type=utils.bool_flag,
+        help="Whether to use dense prediction in projection head (Default: False)")
 
     # Temperature teacher parameters
     parser.add_argument('--warmup_teacher_temp', default=0.04, type=float,
@@ -217,20 +226,44 @@ def train_dino(args):
             bn=args.bn
             )
         embed_dim = student.head.weight.shape[1]
+        # if the network is a 4-stage vision transformer (i.e. swin)
+
+    elif 'swin' in args.arch:
+        update_config(config, args)
+        student = build_model(config, use_dense_prediction=args.use_dense_prediction)
+        teacher = build_model(config, is_teacher=True, use_dense_prediction=args.use_dense_prediction)
+        student.head = DINOHead(
+            student.num_features,
+            args.out_dim,
+            use_bn=args.use_bn_in_head,
+            norm_last_layer=args.norm_last_layer,
+        )
+        teacher.head = DINOHead(teacher.num_features, args.out_dim, args.use_bn_in_head)
+
+        if args.use_dense_prediction:
+            student.head_dense = DINOHead(
+                student.num_features,
+                args.out_dim,
+                use_bn=args.use_bn_in_head,
+                norm_last_layer=args.norm_last_layer,
+            )
+            teacher.head_dense = DINOHead(teacher.num_features, args.out_dim, args.use_bn_in_head)
+
     else:
         print(f"Unknow architecture: {args.arch}")
 
-    # multi-crop wrapper handles forward with inputs of different resolutions
-    student = utils.MultiCropWrapper(student, DINOHead(
-        embed_dim,
-        args.out_dim,
-        use_bn=args.use_bn_in_head,
-        norm_last_layer=args.norm_last_layer,
-    ))
-    teacher = utils.MultiCropWrapper(
-        teacher,
-        DINOHead(embed_dim, args.out_dim, args.use_bn_in_head),
-    )
+    if 'swin' not in args.arch:
+        # multi-crop wrapper handles forward with inputs of different resolutions
+        student = utils.MultiCropWrapper(student, DINOHead(
+            embed_dim,
+            args.out_dim,
+            use_bn=args.use_bn_in_head,
+            norm_last_layer=args.norm_last_layer,
+        ))
+        teacher = utils.MultiCropWrapper(
+            teacher,
+            DINOHead(embed_dim, args.out_dim, args.use_bn_in_head),
+        )
     # move networks to gpu
     student, teacher = student.cuda(), teacher.cuda()
     # print models for check
