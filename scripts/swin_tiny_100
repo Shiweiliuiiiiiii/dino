@@ -22,7 +22,7 @@ python -m torch.distributed.launch --nproc_per_node=1 main_esvit.py --arch swin_
 --warmup_epochs 10  --norm_last_layer True \
 --use_dense_prediction True --cfg experiments/imagenet/swin/swin_tiny_patch4_window7_224.yaml
 
-python -m torch.distributed.launch --nproc_per_node=1 main_esvit.py --arch swin_tiny \
+python -m torch.distributed.launch --nproc_per_node=1 main_dino.py --arch swin_tiny \
 --data_path /projects/2/managed_datasets/imagenet/train \
 --output_dir /projects/0/prjste21060/projects/dino/dino_swin_tiny_100/ --batch_size_per_gpu 128 --epochs 100 \
 --warmup_epochs 10 --cfg experiments/imagenet/swin/swin_tiny_patch4_window7_224.yaml
