@@ -62,6 +62,10 @@ def str2bool(v):
 def get_args_parser():
     parser = argparse.ArgumentParser('DINO', add_help=False)
 
+    parser.add_argument('--cfg',
+                        help='experiment configure file name',
+                        type=str)
+    
     # Model parameters
     parser.add_argument('--arch', default='vit_small', type=str,
         choices=['vit_tiny', 'vit_small', 'vit_base', 'xcit', 'deit_tiny', 'deit_small',
