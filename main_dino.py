@@ -65,7 +65,7 @@ def get_args_parser():
     parser.add_argument('--cfg',
                         help='experiment configure file name',
                         type=str)
-    
+
     # Model parameters
     parser.add_argument('--arch', default='vit_small', type=str,
         choices=['vit_tiny', 'vit_small', 'vit_base', 'xcit', 'deit_tiny', 'deit_small',
@@ -157,6 +157,10 @@ def get_args_parser():
         distributed training; see https://pytorch.org/docs/stable/distributed.html""")
     parser.add_argument("--local_rank", default=0, type=int, help="Please ignore and do not set this argument.")
 
+    parser.add_argument('opts',
+                        help="Modify config options using the command-line",
+                        default=None,
+                        nargs=argparse.REMAINDER)
     # SLaK
     parser.add_argument('--nb_classes', default=1000, type=int, help='number of the classification types')
     parser.add_argument('--layer_scale_init_value', default=1e-6, type=float, help="Layer scale initial values")
