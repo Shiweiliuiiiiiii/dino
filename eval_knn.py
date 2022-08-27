@@ -78,9 +78,9 @@ def extract_feature_pipeline(args):
         model = torch.hub.load('facebookresearch/xcit:main', args.arch, num_classes=0)
     elif 'SLaK' in args.arch:
         model = create_model(args.arch, pretrained=False,num_classes=args.nb_classes,
-            drop_path_rate=args.drop_path_rate,layer_scale_init_value=args.layer_scale_init_value,
-            head_init_scale=args.head_init_scale,kernel_size=args.kernel_size,width_factor=args.width_factor,
-            LoRA=args.LoRA)
+            drop_path_rate=args.drop_path_rate, layer_scale_init_value=args.layer_scale_init_value,
+            head_init_scale=args.head_init_scale, kernel_size=args.kernel_size, width_factor=args.width_factor,
+            LoRA=args.LoRA, bn=args.bn)
     elif args.arch in torchvision_models.__dict__.keys():
         model = torchvision_models.__dict__[args.arch](num_classes=0)
         model.fc = nn.Identity()
@@ -240,6 +240,7 @@ if __name__ == '__main__':
     parser.add_argument('--kernel_size', nargs="*", type=int, default = [7,7,7,7,5], help='kernel size (default: [31,29,27,13,5], the last number is N)')
     parser.add_argument('--width_factor', type=float, default=1.0, help='set the width factor of the model')
     parser.add_argument('--LoRA', type=str2bool, default=False, help='Enabling low rank path')
+    parser.add_argument('--bn', type=str2bool, default=True, help='add batch norm layer after each path')
     args = parser.parse_args()
 
     utils.init_distributed_mode(args)

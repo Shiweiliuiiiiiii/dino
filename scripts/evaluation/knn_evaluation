@@ -1,9 +1,5 @@
 #!/bin/bash
-<<<<<<< HEAD
 #SBATCH --job-name=eval_knn_dino_51_128
-=======
-#SBATCH --job-name=dino_51x51_nosparse_decom_knn
->>>>>>> 178991b74f67ae03d6fbc0156ea7aa5173b592ec
 #SBATCH -p gpu
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
@@ -11,23 +7,15 @@
 #SBATCH --gpus=1
 #SBATCH -t 0-0:59:59
 #SBATCH --cpus-per-task=18
-<<<<<<< HEAD
 #SBATCH -o eval_knn_dino_51_128.out
-=======
-#SBATCH -o dino_51x51_nosparse_decom_knn.out
->>>>>>> 178991b74f67ae03d6fbc0156ea7aa5173b592ec
 
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
 source activate LoRA
 
 python -m torch.distributed.launch --nproc_per_node=1 eval_knn.py --data_path /projects/2/managed_datasets/imagenet/ \
-<<<<<<< HEAD
 --arch SLaK_tiny --kernel_size 51 49 47 13 5 --LoRA True \
 --pretrained_weights /projects/0/prjste21060/projects/dino/dino_slak_51_decom_sense_128/checkpoint.pth
-=======
---arch SLaK_tiny --kernel_size 51 49 47 13 5 --LoRA True  \
---pretrained_weights /projects/0/prjste21060/projects/dino/dino_slak_51/checkpoint.pth
->>>>>>> 178991b74f67ae03d6fbc0156ea7aa5173b592ec
+
 
 
 source deactivate
