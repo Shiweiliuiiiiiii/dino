@@ -11,7 +11,7 @@
 #SBATCH -o dino_swin_tiny_4x4_patch_100_resume1.out
 
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
-source activate LoRA
+source activate slak
 
 DATA_PATH=/projects/2/managed_datasets/imagenet/
 PROJ_PATH=your_esvit_project_path
