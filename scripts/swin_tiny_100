@@ -8,14 +8,14 @@
 #SBATCH -t 3-11:59:59
 #SBATCH --exclusive
 #SBATCH --cpus-per-task=72
-#SBATCH -o dino_swin_tiny_4x4_patch_100.out
+#SBATCH -o dino_swin_tiny_4x4_patch_100_resume1.out
 
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
 source activate LoRA
 
 DATA_PATH=/projects/2/managed_datasets/imagenet/
 PROJ_PATH=your_esvit_project_path
-OUT_PATH=/projects/0/prjste21060/projects/dino/dino_swin_tiny_100/
+OUT_PATH=/projects/0/prjste21060/projects/dino/dino_swin_tiny_100_/
 
 python -m torch.distributed.launch --nproc_per_node=4 main_dino.py --arch swin_tiny \
 --data_path $DATA_PATH/train --output_dir $OUT_PATH --batch_size_per_gpu 64 --epochs 100 \
