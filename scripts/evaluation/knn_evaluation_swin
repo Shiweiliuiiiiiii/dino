@@ -1,0 +1,20 @@
+#!/bin/bash
+#SBATCH --job-name=knn_swin_window_7
+#SBATCH -p gpu
+#SBATCH -N 1
+#SBATCH --ntasks-per-node=1
+#SBATCH --gpus-per-node=1
+#SBATCH --gpus=1
+#SBATCH -t 0-0:59:59
+#SBATCH --cpus-per-task=18
+#SBATCH -o knn_swin_window_7.out
+
+source /home/sliu/miniconda3/etc/profile.d/conda.sh
+source activate slak
+
+python -m torch.distributed.launch --nproc_per_node=1 eval_knn.py --data_path /projects/2/managed_datasets/imagenet/ \
+--arch swin_tiny --pretrained_weights /projects/0/prjste21060/projects/dino/dino_swin_tiny_100_/checkpoint.pth --cfg experiments/imagenet/swin/swin_tiny_patch4_window7_224.yaml
+
+
+
+source deactivate

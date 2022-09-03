@@ -26,6 +26,12 @@ from torchvision import models as torchvision_models
 import utils
 import vision_transformer as vits
 from timm.models import create_model
+
+from models import build_model
+from config import config
+from config import update_config
+
+
 import models.SLaK
 
 def str2bool(v):
@@ -84,6 +90,9 @@ def extract_feature_pipeline(args):
     elif args.arch in torchvision_models.__dict__.keys():
         model = torchvision_models.__dict__[args.arch](num_classes=0)
         model.fc = nn.Identity()
+    elif 'swin' in args.arch:
+        update_config(config, args)
+        model = build_model(config, is_teacher=True, use_dense_prediction=args.use_dense_prediction)
     else:
         print(f"Architecture {args.arch} non supported")
         sys.exit(1)
@@ -210,6 +219,9 @@ class ReturnIndexDataset(datasets.ImageFolder):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser('Evaluation with weighted k-NN on ImageNet')
+    parser.add_argument('--cfg',
+                        help='experiment configure file name',
+                        type=str)
     parser.add_argument('--batch_size_per_gpu', default=128, type=int, help='Per-GPU batch-size')
     parser.add_argument('--nb_knn', default=[10, 20, 100, 200], nargs='+', type=int,
         help='Number of NN to use. 20 is usually working the best.')
@@ -231,6 +243,10 @@ if __name__ == '__main__':
         distributed training; see https://pytorch.org/docs/stable/distributed.html""")
     parser.add_argument("--local_rank", default=0, type=int, help="Please ignore and do not set this argument.")
     parser.add_argument('--data_path', default='/path/to/imagenet/', type=str)
+
+    # swin
+    parser.add_argument('--use_dense_prediction', default=False, type=utils.bool_flag,
+        help="Whether to use dense prediction in projection head (Default: False)")
 
     # SLaK
     parser.add_argument('--drop_path_rate', type=float, default=0.1, help="stochastic depth rate")
