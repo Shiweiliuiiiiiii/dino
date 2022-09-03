@@ -247,7 +247,10 @@ if __name__ == '__main__':
     # swin
     parser.add_argument('--use_dense_prediction', default=False, type=utils.bool_flag,
         help="Whether to use dense prediction in projection head (Default: False)")
-
+    parser.add_argument('opts',
+                        help="Modify config options using the command-line",
+                        default=None,
+                        nargs=argparse.REMAINDER)
     # SLaK
     parser.add_argument('--drop_path_rate', type=float, default=0.1, help="stochastic depth rate")
     parser.add_argument('--nb_classes', default=1000, type=int, help='number of the classification types')
