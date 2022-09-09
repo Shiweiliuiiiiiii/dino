@@ -12,7 +12,7 @@
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
 source activate slak
 
-python -m torch.distributed.launch --nproc_per_node=1 eval_knn.py --data_path /projects/2/managed_datasets/imagenet/ \
+python -m torch.distributed.launch --nproc_per_node=1 --master_addr=127.0.0.1 --master_port=10001 eval_knn.py --data_path /projects/2/managed_datasets/imagenet/ \
 --arch SLaK_tiny --kernel_size 3 3 3 3 100 --LoRA False --bn True --pretrained_weights /projects/0/prjste21060/projects/dino/dino_slak_3_bn/checkpoint.pth
 
 
