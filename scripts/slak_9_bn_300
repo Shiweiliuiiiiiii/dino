@@ -7,7 +7,7 @@
 #SBATCH --gpus=4
 #SBATCH -t 4-11:59:59
 #SBATCH --exclusive
-#SBATCH --cpus-per-task=72
+#SBATCH --cpus-per-task=18
 #SBATCH -o dino_slak_9_bn_300.out
 
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
