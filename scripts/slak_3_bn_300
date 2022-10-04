@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=dino_slak_3_bn_300
-##SBATCH -p gpuo
+#SBATCH -p gpu
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=4
 #SBATCH --gpus-per-node=4
