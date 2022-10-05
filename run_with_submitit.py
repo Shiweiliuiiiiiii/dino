@@ -123,6 +123,9 @@ def main():
 
     trainer = Trainer(args)
     job = executor.submit(trainer)
+    job.result()  # will raise a FailedJobError stating the ZeroDivisionError with its stacktrace
+    full_stderr = job.stderr()  # recover the full stack trace if need be
+    print(full_stderr)
 
     print(f"Submitted job_id: {job.job_id}")
     print(f"Logs and checkpoints will be saved at: {args.output_dir}")
