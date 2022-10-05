@@ -2,7 +2,7 @@
 #SBATCH --job-name=dino_slak_3_bn_300
 #SBATCH -p gpu
 #SBATCH -N 1
-#SBATCH --ntasks-per-node=4
+#SBATCH --ntasks-per-node=1
 #SBATCH --gpus-per-node=4
 #SBATCH --gpus=4
 #SBATCH -t 4-11:59:59
