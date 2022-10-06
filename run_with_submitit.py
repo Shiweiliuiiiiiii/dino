@@ -98,7 +98,7 @@ def main():
 
     num_gpus_per_node = args.ngpus
     nodes = args.nodes
-    timeout_min = args.timeout
+    timeout_min = args.timeout * 60
 
     partition = args.partition
     kwargs = {}
