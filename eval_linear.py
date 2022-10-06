@@ -23,7 +23,7 @@ import torch.backends.cudnn as cudnn
 from torchvision import datasets
 from torchvision import transforms as pth_transforms
 from torchvision import models as torchvision_models
-
+import models.SLaK
 import utils
 import vision_transformer as vits
 
@@ -39,6 +39,14 @@ def eval_linear(args):
     if args.arch in vits.__dict__.keys():
         model = vits.__dict__[args.arch](patch_size=args.patch_size, num_classes=0)
         embed_dim = model.embed_dim * (args.n_last_blocks + int(args.avgpool_patchtokens))
+    # if the network is a slak
+    elif 'SLaK' in args.arch:
+        model = create_model(args.arch, pretrained=False, num_classes=args.nb_classes,
+                             drop_path_rate=args.drop_path_rate, layer_scale_init_value=args.layer_scale_init_value,
+                             head_init_scale=args.head_init_scale, kernel_size=args.kernel_size,
+                             width_factor=args.width_factor,
+                             LoRA=args.LoRA, bn=args.bn)
+        embed_dim = student.head.weight.shape[1]
     # if the network is a XCiT
     elif "xcit" in args.arch:
         model = torch.hub.load('facebookresearch/xcit:main', args.arch, num_classes=0)
@@ -277,5 +285,17 @@ if __name__ == '__main__':
     parser.add_argument('--output_dir', default=".", help='Path to save logs and checkpoints')
     parser.add_argument('--num_labels', default=1000, type=int, help='Number of labels for linear classifier')
     parser.add_argument('--evaluate', dest='evaluate', action='store_true', help='evaluate model on validation set')
+
+    # SLaK
+    parser.add_argument('--drop_path_rate', type=float, default=0.1, help="stochastic depth rate")
+    parser.add_argument('--nb_classes', default=1000, type=int, help='number of the classification types')
+    parser.add_argument('--layer_scale_init_value', default=1e-6, type=float, help="Layer scale initial values")
+    parser.add_argument('--head_init_scale', default=1.0, type=float,
+                        help='classifier head initial scale, typically adjusted in fine-tuning')
+    parser.add_argument('--kernel_size', nargs="*", type=int, default=[7, 7, 7, 7, 5],
+                        help='kernel size (default: [31,29,27,13,5], the last number is N)')
+    parser.add_argument('--width_factor', type=float, default=1.0, help='set the width factor of the model')
+    parser.add_argument('--LoRA', type=str2bool, default=False, help='Enabling low rank path')
+    parser.add_argument('--bn', type=str2bool, default=True, help='add batch norm layer after each path')
     args = parser.parse_args()
     eval_linear(args)
