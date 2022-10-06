@@ -91,6 +91,9 @@ def main():
     if args.output_dir == "":
         args.output_dir = get_shared_folder() / "%j"
     Path(args.output_dir).mkdir(parents=True, exist_ok=True)
+
+    function = submitit.helpers.CommandFunction(["which", "python"])
+    print(function)
     executor = submitit.AutoExecutor(folder=args.output_dir, slurm_max_num_timeout=30)
 
     num_gpus_per_node = args.ngpus
