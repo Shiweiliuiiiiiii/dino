@@ -406,6 +406,20 @@ def train_one_epoch(student, teacher, teacher_without_ddp, dino_loss, data_loade
 
         if not math.isfinite(loss.item()):
             print("Loss is {}, stopping training".format(loss.item()), force=True)
+
+            # ============ writing logs on a NaN for debug ... ============
+            save_dict = {
+                'student': student.state_dict(),
+                'teacher': teacher.state_dict(),
+                'optimizer': optimizer.state_dict(),
+                'epoch': epoch + 1,
+                'args': args,
+                'dino_loss': dino_loss.state_dict(),
+            }
+            if fp16_scaler is not None:
+                save_dict['fp16_scaler'] = fp16_scaler.state_dict()
+            utils.save_on_master(save_dict, os.path.join(args.output_dir, 'checkpoint_NaN.pth'))
+
             sys.exit(1)
 
         # student update
