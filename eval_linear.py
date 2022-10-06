@@ -190,6 +190,8 @@ def train(model, linear_classifier, optimizer, loader, epoch, n, avgpool):
                 if avgpool:
                     output = torch.cat((output.unsqueeze(-1), torch.mean(intermediate_output[-1][:, 1:], dim=1).unsqueeze(-1)), dim=-1)
                     output = output.reshape(output.shape[0], -1)
+            elif 'SLaK' in args.arch:
+                output = model.forward_features(inp)
             else:
                 output = model(inp)
         output = linear_classifier(output)
