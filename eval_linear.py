@@ -291,7 +291,7 @@ if __name__ == '__main__':
         training (highest LR used during training). The learning rate is linearly scaled
         with the batch size, and specified here for a reference batch size of 256.
         We recommend tweaking the LR depending on the checkpoint evaluated.""")
-    parser.add_argument('--batch_size_per_gpu', default=128, type=int, help='Per-GPU batch-size')
+    parser.add_argument('--batch_size_per_gpu', default=256, type=int, help='Per-GPU batch-size')
     parser.add_argument("--dist_url", default="env://", type=str, help="""url used to set up
         distributed training; see https://pytorch.org/docs/stable/distributed.html""")
     parser.add_argument("--local_rank", default=0, type=int, help="Please ignore and do not set this argument.")
