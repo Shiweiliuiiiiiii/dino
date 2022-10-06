@@ -24,6 +24,7 @@ from torchvision import datasets
 from torchvision import transforms as pth_transforms
 from torchvision import models as torchvision_models
 import models.SLaK
+from timm.models import create_model
 import utils
 import vision_transformer as vits
 
