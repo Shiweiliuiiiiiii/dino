@@ -23,10 +23,16 @@ import torch.backends.cudnn as cudnn
 from torchvision import datasets
 from torchvision import transforms as pth_transforms
 from torchvision import models as torchvision_models
-import models.SLaK
-from timm.models import create_model
+
 import utils
 import vision_transformer as vits
+from timm.models import create_model
+from models import build_model
+from config import config
+from config import update_config
+
+import models.SLaK
+
 
 def str2bool(v):
     """
@@ -66,6 +72,9 @@ def eval_linear(args):
         model = torch.hub.load('facebookresearch/xcit:main', args.arch, num_classes=0)
         embed_dim = model.embed_dim
     # otherwise, we check if the architecture is in torchvision models
+    elif 'swin' in args.arch:
+        update_config(config, args)
+        model = build_model(config, is_teacher=True, use_dense_prediction=args.use_dense_prediction)
     elif args.arch in torchvision_models.__dict__.keys():
         model = torchvision_models.__dict__[args.arch]()
         embed_dim = model.fc.weight.shape[1]
@@ -277,6 +286,9 @@ class LinearClassifier(nn.Module):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser('Evaluation with linear classification on ImageNet')
+    parser.add_argument('--cfg',
+                        help='experiment configure file name',
+                        type=str)
     parser.add_argument('--n_last_blocks', default=4, type=int, help="""Concatenate [CLS] tokens
         for the `n` last blocks. We use `n=4` when evaluating ViT-Small and `n=1` with ViT-Base.""")
     parser.add_argument('--avgpool_patchtokens', default=False, type=utils.bool_flag,
@@ -301,6 +313,14 @@ if __name__ == '__main__':
     parser.add_argument('--output_dir', default=".", help='Path to save logs and checkpoints')
     parser.add_argument('--num_labels', default=1000, type=int, help='Number of labels for linear classifier')
     parser.add_argument('--evaluate', dest='evaluate', action='store_true', help='evaluate model on validation set')
+
+    # swin
+    parser.add_argument('--use_dense_prediction', default=False, type=utils.bool_flag,
+        help="Whether to use dense prediction in projection head (Default: False)")
+    parser.add_argument('opts',
+                        help="Modify config options using the command-line",
+                        default=None,
+                        nargs=argparse.REMAINDER)
 
     # SLaK
     parser.add_argument('--drop_path_rate', type=float, default=0.1, help="stochastic depth rate")
