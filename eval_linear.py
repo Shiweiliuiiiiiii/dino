@@ -60,7 +60,7 @@ def eval_linear(args):
                              head_init_scale=args.head_init_scale, kernel_size=args.kernel_size,
                              width_factor=args.width_factor,
                              LoRA=args.LoRA, bn=args.bn)
-        embed_dim = student.head.weight.shape[1]
+        embed_dim = model.head.weight.shape[1]
     # if the network is a XCiT
     elif "xcit" in args.arch:
         model = torch.hub.load('facebookresearch/xcit:main', args.arch, num_classes=0)
