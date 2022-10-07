@@ -54,6 +54,10 @@ def eval_linear(args):
     print("\n".join("%s: %s" % (k, str(v)) for k, v in sorted(dict(vars(args)).items())))
     cudnn.benchmark = True
     depths = None
+
+    if not os.path.exists(args.output_dir):
+        # Create a new directory because it does not exist
+        os.makedirs(args.output_dir)
     # ============ building network ... ============
     # if the network is a Vision Transformer (i.e. vit_tiny, vit_small, vit_base)
     if args.arch in vits.__dict__.keys():
@@ -207,6 +211,8 @@ def train(model, linear_classifier, optimizer, loader, epoch, n, avgpool, depths
     metric_logger.add_meter('lr', utils.SmoothedValue(window_size=1, fmt='{value:.6f}'))
     header = 'Epoch: [{}]'.format(epoch)
     for (inp, target) in metric_logger.log_every(loader, 20, header):
+        if inp > 0:
+            break
         # move to gpu
         inp = inp.cuda(non_blocking=True)
         target = target.cuda(non_blocking=True)
