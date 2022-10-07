@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=knn_slak_31x31_new
+#SBATCH --job-name=knn_slak_31x31_128_new
 #SBATCH -p gpu
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
@@ -7,13 +7,13 @@
 #SBATCH --gpus=1
 #SBATCH -t 0-0:59:59
 #SBATCH --cpus-per-task=18
-#SBATCH -o knn_slak_31x31_new.out
+#SBATCH -o knn_slak_31x31_128_new.out
 
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
 source activate slak
 
 python -m torch.distributed.launch --nproc_per_node=1 --master_port=56484   eval_knn.py --data_path /projects/2/managed_datasets/imagenet/ --batch_size_per_gpu 256 \
---arch SLaK_tiny --kernel_size 31 29 27 13 5 --pretrained_weights /projects/0/prjste21060/projects/dino/dino_slak_31_nodecom/checkpoint.pth
+--arch SLaK_tiny --kernel_size 31 29 27 13 5 --pretrained_weights /projects/0/prjste21060/projects/dino/dino_slak_31_nodecom_128/checkpoint.pth
 
 
 
