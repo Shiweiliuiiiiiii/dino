@@ -13,7 +13,7 @@ source /home/sliu/miniconda3/etc/profile.d/conda.sh
 source activate slak
 
 python -m torch.distributed.launch --nproc_per_node=1 eval_knn.py --data_path /projects/2/managed_datasets/imagenet/ --batch_size_per_gpu 256  \
---arch SLaK_tiny --kernel_size 7 7 7 7 100 --LoRA False --bn True --pretrained_weights /projects/0/prjste21060/projects/dino/dino_slak_7/checkpoint.pth
+--arch SLaK_tiny --kernel_size 7 7 7 7 100 --LoRA False --bn True --pretrained_weights /projects/0/prjste21060/projects/dino/test/checkpoint.pth
 
 
 
