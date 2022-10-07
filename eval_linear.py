@@ -210,9 +210,9 @@ def train(model, linear_classifier, optimizer, loader, epoch, n, avgpool, depths
     metric_logger = utils.MetricLogger(delimiter="  ")
     metric_logger.add_meter('lr', utils.SmoothedValue(window_size=1, fmt='{value:.6f}'))
     header = 'Epoch: [{}]'.format(epoch)
+    i = 0
     for (inp, target) in metric_logger.log_every(loader, 20, header):
-        if inp > 0:
-            break
+        if i >=1: break
         # move to gpu
         inp = inp.cuda(non_blocking=True)
         target = target.cuda(non_blocking=True)
@@ -245,6 +245,7 @@ def train(model, linear_classifier, optimizer, loader, epoch, n, avgpool, depths
         torch.cuda.synchronize()
         metric_logger.update(loss=loss.item())
         metric_logger.update(lr=optimizer.param_groups[0]["lr"])
+        i += 1
     # gather the stats from all processes
     metric_logger.synchronize_between_processes()
     print("Averaged stats:", metric_logger)
