@@ -74,7 +74,24 @@ def eval_linear(args):
     # otherwise, we check if the architecture is in torchvision models
     elif 'swin' in args.arch:
         update_config(config, args)
-        model = build_model(config, is_teacher=True, use_dense_prediction=args.use_dense_prediction)
+        model = build_model(config, is_teacher=True)
+
+        swin_spec = config.MODEL.SPEC
+        embed_dim = swin_spec['DIM_EMBED']
+        depths = swin_spec['DEPTHS']
+        num_heads = swin_spec['NUM_HEADS']
+
+        num_features = []
+        for i, d in enumerate(depths):
+            num_features += [int(embed_dim * 2 ** i)] * d
+
+        print(num_features)
+        num_features_linear = sum(num_features[-4:])
+
+        print(f'num_features_linear {num_features_linear}')
+
+        linear_classifier = LinearClassifier(num_features_linear, args.num_labels)
+
     elif args.arch in torchvision_models.__dict__.keys():
         model = torchvision_models.__dict__[args.arch]()
         embed_dim = model.fc.weight.shape[1]

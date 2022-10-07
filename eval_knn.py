@@ -87,6 +87,7 @@ def extract_feature_pipeline(args):
             drop_path_rate=args.drop_path_rate, layer_scale_init_value=args.layer_scale_init_value,
             head_init_scale=args.head_init_scale, kernel_size=args.kernel_size, width_factor=args.width_factor,
             LoRA=args.LoRA, bn=args.bn)
+        model.head = nn.Identity()
     elif args.arch in torchvision_models.__dict__.keys():
         model = torchvision_models.__dict__[args.arch](num_classes=0)
         model.fc = nn.Identity()
