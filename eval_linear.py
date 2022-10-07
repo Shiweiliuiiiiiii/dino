@@ -100,6 +100,7 @@ def eval_linear(args):
     else:
         print(f"Unknow architecture: {args.arch}")
         sys.exit(1)
+    print(model)
     model.cuda()
     model.eval()
     # load weights to evaluate
