@@ -163,6 +163,9 @@ def get_args_parser():
                         default=None,
                         nargs=argparse.REMAINDER)
     # SLaK
+    parser.add_argument('--nb_classes', default=1000, type=int, help='number of the classification types')
+    parser.add_argument('--layer_scale_init_value', default=1e-6, type=float, help="Layer scale initial values")
+    parser.add_argument('--head_init_scale', default=1.0, type=float, help='classifier head initial scale, typically adjusted in fine-tuning')
     parser.add_argument('--LoRA', type=str2bool, default=False, help='Enabling kernel decomposition')
     parser.add_argument('--width_factor', type=float, default=1.0, help='set the width factor of the model')
     parser.add_argument('--kernel_size', nargs="*", type=int, default=[51, 49, 47, 13, 5],
