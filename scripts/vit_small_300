@@ -1,0 +1,21 @@
+#!/bin/bash
+#SBATCH --job-name=dino_vit_small_8x8_128_300
+#SBATCH -p gpu
+#SBATCH -N 1
+#SBATCH --ntasks-per-node=4
+#SBATCH --gpus-per-node=4
+#SBATCH --gpus=4
+#SBATCH -t 3-23:59:59
+#SBATCH --exclusive
+#SBATCH --cpus-per-task=18
+#SBATCH -o dino_vit_small_8x8_128_300.out
+
+source /home/sliu/miniconda3/etc/profile.d/conda.sh
+source activate slak
+
+python -m torch.distributed.launch --nproc_per_node=4 main_dino.py \
+--arch vit_small  --epochs 300 --batch_size_per_gpu 128 \
+--data_path /projects/2/managed_datasets/imagenet/train --output_dir /projects/0/prjste21060/projects/dino/dino_vit_small_128_300/
+
+
+source deactivate

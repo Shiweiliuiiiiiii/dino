@@ -1,24 +1,25 @@
 #!/bin/bash
-#SBATCH --job-name=dino_swin_tiny_4x4_patch_100
+#SBATCH --job-name=dino_swin_tiny_w7x7_300_bs64
 #SBATCH -p gpu
 #SBATCH -N 1
-#SBATCH --ntasks-per-node=1
+#SBATCH --ntasks-per-node=4
 #SBATCH --gpus-per-node=4
 #SBATCH --gpus=4
-#SBATCH -t 3-11:59:59
+#SBATCH -t 4-11:59:59
 #SBATCH --exclusive
 #SBATCH --cpus-per-task=72
-#SBATCH -o dino_swin_tiny_4x4_patch_100_resume1.out
+#SBATCH -o dino_swin_tiny_w7x7_300_bs64.out
 
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
 source activate slak
 
-DATA_PATH=/projects/2/managed_datasets/imagenet/
-PROJ_PATH=your_esvit_project_path
-OUT_PATH=/projects/0/prjste21060/projects/dino/dino_swin_tiny_100_/
+#DATA_PATH=/projects/2/managed_datasets/imagenet/
+#PROJ_PATH=your_esvit_project_path
+#OUT_PATH=/projects/0/prjste21060/projects/dino/dino_swin_tiny_patch4_window7_300/
 
-python -m torch.distributed.launch --nproc_per_node=4 main_dino.py --arch swin_tiny \
---data_path $DATA_PATH/train --output_dir $OUT_PATH --batch_size_per_gpu 64 --epochs 100 \
+python -m torch.distributed.launch --nproc_per_node=1 main_dino.py --arch swin_tiny \
+--data_path /projects/2/managed_datasets/imagenet/train --output_dir /projects/0/prjste21060/projects/dino/dino_swin_tiny_patch4_window7_300/ \
+--batch_size_per_gpu 64 --epochs 300 \
 --warmup_epochs 10  --norm_last_layer True \
 --use_dense_prediction False --cfg experiments/imagenet/swin/swin_tiny_patch4_window7_224.yaml
 
