@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=knn_vit_small_8x8_128
+#SBATCH --job-name=linear_vit_small_8x8_128
 #SBATCH -p gpu
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
@@ -7,14 +7,14 @@
 #SBATCH --gpus=1
 #SBATCH -t 0-0:59:59
 #SBATCH --cpus-per-task=18
-#SBATCH -o knn_vit_small_8x8_128.out
+#SBATCH -o linear_vit_small_8x8_128.out
 
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
 source activate slak
 
-python -m torch.distributed.launch --nproc_per_node=1 eval_linear.py --data_path /projects/2/managed_datasets/imagenet/ \
---arch vit_small --pretrained_weights --patch_size 8 \
- /projects/0/prjste21060/projects/dino/dino_swin_tiny_100_/checkpoint.pth --cfg experiments/imagenet/swin/swin_tiny_patch4_window7_224.yaml
+python -m torch.distributed.launch --nproc_per_node=1 --master_port=18888 eval_linear.py --data_path /projects/2/managed_datasets/imagenet/ \
+--arch vit_small  \
+--pretrained_weights /projects/0/prjste21060/projects/dino/vit_small/checkpoint.pth
 
 
 
