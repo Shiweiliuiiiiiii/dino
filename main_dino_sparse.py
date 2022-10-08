@@ -162,6 +162,8 @@ def get_args_parser():
                         help="Modify config options using the command-line",
                         default=None,
                         nargs=argparse.REMAINDER)
+    parser.add_argument('--device', default='cuda',
+                        help='device to use for training / testing')
     # SLaK
     parser.add_argument('--nb_classes', default=1000, type=int, help='number of the classification types')
     parser.add_argument('--layer_scale_init_value', default=1e-6, type=float, help="Layer scale initial values")
@@ -196,7 +198,7 @@ def train_dino(args):
     print("git:\n  {}\n".format(utils.get_sha()))
     print("\n".join("%s: %s" % (k, str(v)) for k, v in sorted(dict(vars(args)).items())))
     cudnn.benchmark = True
-
+    device = torch.device(args.device)
     # ============ preparing data ... ============
     transform = DataAugmentationDINO(
         args.global_crops_scale,
