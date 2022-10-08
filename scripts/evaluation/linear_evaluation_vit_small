@@ -5,7 +5,7 @@
 #SBATCH --ntasks-per-node=1
 #SBATCH --gpus-per-node=1
 #SBATCH --gpus=1
-#SBATCH -t 0-0:59:59
+#SBATCH -t 2-0:59:59
 #SBATCH --cpus-per-task=18
 #SBATCH -o linear_vit_small_8x8_128.out
 
