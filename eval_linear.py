@@ -184,7 +184,7 @@ def eval_linear(args):
         log_stats = {**{f'train_{k}': v for k, v in train_stats.items()},
                      'epoch': epoch}
         if epoch % args.val_freq == 0 or epoch == args.epochs - 1:
-            test_stats = validate_network(val_loader, model, linear_classifier, args.n_last_blocks, args.avgpool_patchtokens)
+            test_stats = validate_network(val_loader, model, linear_classifier, args.n_last_blocks, args.avgpool_patchtokens, depths)
             print(f"Accuracy at epoch {epoch} of the network on the {len(dataset_val)} test images: {test_stats['acc1']:.1f}%")
             best_acc = max(best_acc, test_stats["acc1"])
             print(f'Max accuracy so far: {best_acc:.2f}%')
@@ -250,7 +250,7 @@ def train(model, linear_classifier, optimizer, loader, epoch, n, avgpool, depths
 
 
 @torch.no_grad()
-def validate_network(val_loader, model, linear_classifier, n, avgpool):
+def validate_network(val_loader, model, linear_classifier, n, avgpool, depths):
     linear_classifier.eval()
     metric_logger = utils.MetricLogger(delimiter="  ")
     header = 'Test:'
