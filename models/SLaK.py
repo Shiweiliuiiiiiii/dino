@@ -16,6 +16,8 @@ from timm.models.layers import trunc_normal_, DropPath
 from timm.models.registry import register_model
 from depthwise_conv2d_implicit_gemm import DepthWiseConv2dImplicitGEMM
 
+
+
 use_sync_bn = True
 
 def get_conv2d(in_channels, out_channels, kernel_size, stride, padding, dilation, groups, bias):
@@ -120,7 +122,10 @@ class ReparamLargeKernelConv(nn.Module):
         if hasattr(self, 'small_conv'):
             self.__delattr__('small_conv')
 
-
+    def structural_reparam(self):
+        for m in self.modules():
+            if hasattr(m, 'merge_kernel'):
+                m.merge_kernel()
 
 class Block(nn.Module):
     r""" ConvNeXt Block. There are two equivalent implementations:
