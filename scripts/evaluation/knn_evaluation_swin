@@ -18,7 +18,7 @@ source activate slak
 
 python -m torch.distributed.launch --nproc_per_node=1 eval_knn.py --data_path /projects/2/managed_datasets/imagenet/ \
 --arch swin_tiny --pretrained_weights /projects/0/prjste21060/projects/dino/dino_swin_tiny_patch4_window7_300_96/checkpoint0100.pth \
---cfg experiments/imagenet/swin/swin_tiny_patch4_window7_224.yaml MODEL.NUM_CLASSES 0 --checkpoint_key teacher
+--cfg experiments/imagenet/swin/swin_tiny_patch4_window7_224.yaml MODEL.NUM_CLASSES 0 
 
 
 source deactivate
