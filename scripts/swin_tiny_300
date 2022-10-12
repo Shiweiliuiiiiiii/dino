@@ -5,7 +5,7 @@
 #SBATCH --ntasks-per-node=4
 #SBATCH --gpus-per-node=4
 #SBATCH --gpus=4
-#SBATCH -t 4-11:59:59
+#SBATCH -t 3-11:59:59
 #SBATCH --exclusive
 #SBATCH --cpus-per-task=18
 #SBATCH -o dino_swin_tiny_w7x7_300_bs96_resume1.out
