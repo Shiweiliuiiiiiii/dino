@@ -6,5 +6,3 @@ python -m torch.distributed.launch --nproc_per_node=8 main_dino.py --bn True --t
 --data_path /datadrive_c/imagenet/train  \
 --output_dir /datadrive_c/ssl/slak_9_bn_300_tiny/
 
-
-source deactivate

@@ -6,4 +6,3 @@ nohup python -m torch.distributed.launch --nproc_per_node=8 main_dino.py --arch 
 --batch_size_per_gpu 64 --epochs 300  \
 --use_dense_prediction False --cfg experiments/imagenet/swin/swin_tiny_patch4_window7_224.yaml > swin_tiny_300.txt 2>&1 &
 
- source deactivate

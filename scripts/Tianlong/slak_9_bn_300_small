@@ -5,6 +5,3 @@ python -m torch.distributed.launch --nproc_per_node=8 main_dino.py --bn True --t
 --arch SLaK_small --kernel_size 9 9 9 9 100 --epochs 300 --batch_size_per_gpu 64 \
 --data_path /datadrive_c/imagenet/train  \
 --output_dir /datadrive_c/ssl/slak_9_bn_300_small/
-
-
-source deactivate
