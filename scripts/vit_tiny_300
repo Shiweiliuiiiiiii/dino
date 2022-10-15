@@ -1,14 +1,14 @@
 #!/bin/bash
-#SBATCH --job-name=dino_vit_tiny_8x8_128_300
+#SBATCH --job-name=dino_vit_tiny_8x8_128_300_resume
 #SBATCH -p gpu
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=4
 #SBATCH --gpus-per-node=4
 #SBATCH --gpus=4
-#SBATCH -t 3-23:59:59
+#SBATCH -t 1-23:59:59
 #SBATCH --exclusive
 #SBATCH --cpus-per-task=18
-#SBATCH -o dino_vit_tiny_8x8_128_300.out
+#SBATCH -o dino_vit_tiny_8x8_128_300_resume.out
 
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
 source activate slak
