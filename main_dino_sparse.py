@@ -460,17 +460,6 @@ def train_one_epoch(student, teacher, teacher_without_ddp, dino_loss, data_loade
             mask.print_status()
             teacher_without_ddp.load_state_dict(student.module.state_dict())
 
-            for name, weight in teacher_without_ddp.named_parameters():
-                dense_weight_num = weight.numel()
-                sparse_weight_num = (weight != 0).sum().int().item()
-                layer_density = sparse_weight_num / dense_weight_num
-                print(layer_density)
-            print('x'*60)
-            for name, weight in teacher.named_parameters():
-                dense_weight_num = weight.numel()
-                sparse_weight_num = (weight != 0).sum().int().item()
-                layer_density = sparse_weight_num / dense_weight_num
-                print(layer_density)
 
         # update weight decay and learning rate according to their schedule
         it = len(data_loader) * epoch + it  # global training iteration
