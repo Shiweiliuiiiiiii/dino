@@ -59,14 +59,14 @@ def str2bool(v):
     else:
         raise argparse.ArgumentTypeError('Boolean value expected.')
 
-def SNIP(student_, teacher_, fp16_scaler, keep_ratio, images, mask, dino_loss, args):
+def SNIP(student_, teacher, fp16_scaler, keep_ratio, images, mask, dino_loss, args):
     # Grab a single batch from the training dataset
     images = [im.cuda(non_blocking=True) for im in images]
 
     # Let's create a fresh copy of the network so that we're not worried about
     # affecting the actual training-phase
     student = copy.deepcopy(student_)
-    teacher = copy.deepcopy(teacher_)
+    # teacher = copy.deepcopy(teacher_)
 
     params_groups = utils.get_params_groups(student)
     optimizer = torch.optim.AdamW(params_groups)
