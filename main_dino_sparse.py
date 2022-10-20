@@ -452,7 +452,7 @@ def train_one_epoch(student, teacher, teacher_without_ddp, dino_loss, data_loade
     metric_logger = utils.MetricLogger(delimiter="  ")
     header = 'Epoch: [{}/{}]'.format(epoch, args.epochs)
     for it, (images, _) in enumerate(metric_logger.log_every(data_loader, 10, header)):
-        if it==0:
+        if it == 0 and epoch == 0:
             snip_sparsity = SNIP(student, teacher, fp16_scaler, 1-args.sparsity, images, mask, dino_loss, args)
             for snip_mask, name in zip(snip_sparsity, mask.masks):
                 mask.masks[name] = snip_mask
