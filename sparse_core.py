@@ -80,7 +80,7 @@ class Masking(object):
         self.modules.append(student)
         self.module = student
 
-        for name, tensor in self.student.named_parameters():
+        for name, tensor in self.module.named_parameters():
             if len(tensor.size()) == 2 or len(tensor.size()) == 4:
                 self.names.append(name)
                 self.masks[name] = torch.zeros_like(tensor, dtype=torch.float32, requires_grad=False)
