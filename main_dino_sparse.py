@@ -33,7 +33,7 @@ from torchvision import models as torchvision_models
 import utils
 import vision_transformer as vits
 from vision_transformer import DINOHead
-from .sparse_core import Masking, CosineDecay
+from sparse_core import Masking, CosineDecay
 from timm.models import create_model
 import models.SLaK
 
