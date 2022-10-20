@@ -85,9 +85,7 @@ def SNIP(student, teacher, fp16_scaler, keep_ratio, images, mask, dino_loss, arg
     grads_abs = []
     for name, weight in student.named_parameters():
         if name not in mask.masks: continue
-        print(name)
         grads_abs.append(torch.abs(weight * weight.grad))
-
     # Gather all scores in a single vector and normalise
     all_scores = torch.cat([torch.flatten(x) for x in grads_abs])
     # all_scores = torch.cat([torch.flatten(x.cpu()) for x in grads_abs])
@@ -100,6 +98,7 @@ def SNIP(student, teacher, fp16_scaler, keep_ratio, images, mask, dino_loss, arg
     for g in grads_abs:
         mask = (g >= acceptable_score).float()
         snip_sparsity.append(mask)
+        print(mask)
 
     student.zero_grad()
     return snip_sparsity
