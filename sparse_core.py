@@ -386,6 +386,21 @@ class Masking(object):
         print('The percentage of the total fired weights is:', total_fired_weights)
         return layer_fired_weights, total_fired_weights
 
+    def print_status(self):
+        total_size = 0
+        sparse_size = 0
+        for module in self.modules:
+            for name, weight in module.named_parameters():
+                if name not in self.masks: continue
+                dense_weight_num = weight.numel()
+                sparse_weight_num = (weight != 0).sum().int().item()
+                total_size += dense_weight_num
+                sparse_size += sparse_weight_num
+                layer_density = sparse_weight_num / dense_weight_num
+                print(f'sparsity of layer {name} with tensor {weight.size()} is {1-layer_density}')
+        print('Final sparsity level of {0}: {1}'.format(self.sparsity, 1 - sparse_size / total_size))
+
+
     def synchronism_masks(self):
 
         for name in self.masks.keys():

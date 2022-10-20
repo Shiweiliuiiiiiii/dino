@@ -460,6 +460,7 @@ def train_one_epoch(student, teacher, teacher_without_ddp, dino_loss, data_loade
             for snip_mask, name in zip(snip_sparsity, mask.masks):
                 mask.masks[name] = snip_mask
             mask.apply_mask()
+            mask.print_status()
             teacher_without_ddp.load_state_dict(student.module.state_dict())
 
         # update weight decay and learning rate according to their schedule
