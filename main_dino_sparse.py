@@ -77,10 +77,10 @@ def SNIP(student, teacher, fp16_scaler, keep_ratio, images, mask, dino_loss, arg
         loss = dino_loss(student_output, teacher_output, 0)
 
     student.zero_grad()
-    # if fp16_scaler is None:
-    loss.backward()
-    # else:
-    #     fp16_scaler.scale(loss).backward()
+    if fp16_scaler is None:
+        loss.backward()
+    else:
+        fp16_scaler.scale(loss).backward()
 
     grads_abs = []
     for name, weight in student.named_parameters():
