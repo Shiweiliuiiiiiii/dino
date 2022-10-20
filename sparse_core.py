@@ -69,7 +69,7 @@ class Masking(object):
         self.name2removed = {}
         self.prune_rate = prune_rate
         self.steps = 0
-        self.half = fp16
+        self.half = True
         self.name_to_32bit = {}
 
         if self.args.fix:
@@ -312,7 +312,7 @@ class Masking(object):
                         # if 'momentum_buffer' in self.optimizer.state[tensor]:
                         #     self.optimizer.state[tensor]['momentum_buffer'] = self.optimizer.state[tensor]['momentum_buffer']*self.masks[name]
                     else:
-                        tensor.data = tensor.data*self.masks[name].to(tensor.device).half()
+                        tensor.data.copy_(tensor.data * self.masks[name].to(tensor.device).half())
                         if name in self.name_to_32bit:
                             tensor2 = self.name_to_32bit[name]
                             tensor2.data = tensor2.data*self.masks[name].to(tensor.device)
