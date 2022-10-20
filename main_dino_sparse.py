@@ -84,7 +84,7 @@ def SNIP(student, teacher, fp16_scaler, keep_ratio, images, mask, dino_loss, arg
 
     grads_abs = []
     for name, weight in student.named_parameters():
-        if name not in mask: continue
+        if name not in mask.masks: continue
         grads_abs.append(torch.abs(weight * weight.grad))
 
     # Gather all scores in a single vector and normalise
