@@ -85,8 +85,48 @@ class Masking(object):
                 self.names.append(name)
                 self.masks[name] = torch.zeros_like(tensor, dtype=torch.float32, requires_grad=False)
 
+        print('Removing last layer...')
+        self.remove_weight_partial_name('last_layer')
         # self.init(mode=self.args.sparse_init, density=1-self.args.sparsity)
 
+    def remove_weight(self, name):
+        if name in self.masks:
+            print('Removing {0} of size {1} = {2} parameters.'.format(name, self.masks[name].shape,
+                                                                      self.masks[name].numel()))
+            self.masks.pop(name)
+        elif name + '.weight' in self.masks:
+            print('Removing {0} of size {1} = {2} parameters.'.format(name, self.masks[name + '.weight'].shape,
+                                                                      self.masks[name + '.weight'].numel()))
+            self.masks.pop(name + '.weight')
+        else:
+            print('ERROR', name)
+
+    def remove_weight_partial_name(self, partial_name, verbose=False):
+        removed = set()
+        for name in list(self.masks.keys()):
+            if partial_name in name:
+                if self.verbose:
+                    print('Removing {0} of size {1} with {2} parameters...'.format(name, self.masks[name].shape,
+                                                                                   np.prod(self.masks[name].shape)))
+                removed.add(name)
+                self.masks.pop(name)
+
+        print('Removed {0} layers.'.format(len(removed)))
+
+        i = 0
+        while i < len(self.names):
+            name = self.names[i]
+            if name in removed:
+                self.names.pop(i)
+            else:
+                i += 1
+
+    def remove_type(self, nn_type, verbose=False):
+        for module in self.modules:
+            for name, module in module.named_modules():
+                if isinstance(module, nn_type):
+                    self.remove_weight(name)
+                    # self.remove_weight_partial_name(name, verbose=self.verbose)
 
     def init_optimizer(self):
         if 'fp32_from_fp16' in self.optimizer.state_dict():
