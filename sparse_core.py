@@ -43,7 +43,7 @@ class Masking(object):
             print('Growth mode: {0} not supported!'.format(growth_mode))
             print('Supported modes are:', str(growth_modes))
         self.args = args
-        self.device = torch.device(args.device)
+        # self.device = torch.device(args.device)
         self.growth_mode = growth_mode
         self.prune_mode = prune_mode
         self.redistribution_mode = redistribution_mode
