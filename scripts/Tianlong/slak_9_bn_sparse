@@ -14,7 +14,7 @@ source /home/sliu/miniconda3/etc/profile.d/conda.sh
 source activate LoRA
 
 python -m torch.distributed.launch --nproc_per_node=8 main_dino_sparse.py --bn True \
---sparse --width_factor 1.3 --fix --sparsity 0.6 --sparse_init snip --growth random  \
+--sparse --width_factor 1.3 --fix --sparsity 0.4 --sparse_init snip --growth random  \
 --arch SLaK_tiny --kernel_size 9 9 9 9 100 --epochs 100 --batch_size_per_gpu 64 \
 --data_path /datadrive_c/imagenet/train  \
 --output_dir /datadrive_c/ssl/slak_9_bn_100_sparse/

@@ -398,7 +398,7 @@ class Masking(object):
                 sparse_size += sparse_weight_num
                 layer_density = sparse_weight_num / dense_weight_num
                 print(f'sparsity of layer {name} with tensor {weight.size()} is {1-layer_density}')
-        print('Final sparsity level of {0}: {1}'.format(self.sparsity, 1 - sparse_size / total_size))
+        print('Final sparsity level is {0}'.format(1 - sparse_size / total_size))
 
 
     def synchronism_masks(self):
