@@ -1,0 +1,58 @@
+'''
+100 epoch training ckpts:
+
+3x3
+ckpt:
+/projects/0/prjste21060/projects/dino/dino_slak_3_bn/checkpoint.pth
+trian:
+python -m torch.distributed.launch --nproc_per_node=4 main_dino.py --bn True \
+--arch SLaK_tiny --kernel_size 3 3 3 3 100 --epochs 100 --batch_size_per_gpu 128 \
+--data_path /projects/2/managed_datasets/imagenet/train --output_dir /projects/0/prjste21060/projects/dino/dino_slak_3_bn/checkpoint.pth
+
+
+5x5
+ckpt:
+/projects/0/prjste21060/projects/dino/dino_slak_5_bn/checkpoint.pth
+trian:
+python -m torch.distributed.launch --nproc_per_node=4 main_dino.py --bn True \
+--arch SLaK_tiny --kernel_size 5 5 5 5 100 --epochs 100 --batch_size_per_gpu 128 \
+--data_path /projects/2/managed_datasets/imagenet/train --output_dir /projects/0/prjste21060/projects/dino/dino_slak_5_bn/checkpoint.pth
+
+7x7
+ckpt:
+/projects/0/prjste21060/projects/dino/dino_slak_7_bn/checkpoint.pth
+trian:
+python -m torch.distributed.launch --nproc_per_node=4 main_dino.py --bn True \
+--arch SLaK_tiny --kernel_size 7 7 7 7 100 --epochs 100 --batch_size_per_gpu 128 \
+--data_path /projects/2/managed_datasets/imagenet/train --output_dir /projects/0/prjste21060/projects/dino/dino_slak_7_bn/checkpoint.pth
+
+
+9x9
+ckpt:
+/projects/0/prjste21060/projects/dino/dino_slak_9_bn/checkpoint.pth
+trian:
+python -m torch.distributed.launch --nproc_per_node=4 main_dino.py --bn True \
+--arch SLaK_tiny --kernel_size 9 9 9 9 100 --epochs 100 --batch_size_per_gpu 128 \
+--data_path /projects/2/managed_datasets/imagenet/train --output_dir /projects/0/prjste21060/projects/dino/dino_slak_9_bn/checkpoint.pth
+
+swin
+ckpt:
+/projects/0/prjste21060/projects/dino/dino_swin_tiny_100_/checkpoint.pth
+train:
+python -m torch.distributed.launch --nproc_per_node=4 main_dino.py --arch swin_tiny \
+--data_path $DATA_PATH/train --output_dir $OUT_PATH --batch_size_per_gpu 64 --epochs 100 \
+--warmup_epochs 10  --norm_last_layer True \
+--use_dense_prediction False --cfg experiments/imagenet/swin/swin_tiny_patch4_window7_224.yaml
+
+300 epoch training ckpts:
+
+9x9
+ckpt:
+/projects/0/prjste21060/projects/dino/dino_slak_9_bn_300/checkpoint.pth
+trian:
+python -m torch.distributed.launch --nproc_per_node=4 main_dino.py --bn True --teacher_temp 0.07 --warmup_teacher_temp_epochs 30 --norm_last_layer false  \
+--arch SLaK_tiny --kernel_size 9 9 9 9 100 --epochs 300 --batch_size_per_gpu 128 \
+--data_path /projects/2/managed_datasets/imagenet/train --output_dir /projects/0/prjste21060/projects/dino/dino_slak_9_bn_300/
+
+
+'''
