@@ -110,9 +110,8 @@ def eval_linear(args):
     # load weights to evaluate
     utils.load_pretrained_weights(model, args.pretrained_weights, args.checkpoint_key, args.arch, args.patch_size)
     print(f"Model {args.arch} built.")
-    
+
     n_parameters = sum(p.numel() for p in model.parameters() if p.requires_grad)
-    print("Model = %s" % str(model_without_ddp))
     print('number of params:', n_parameters)
 
     if 'swin' not in args.arch:
