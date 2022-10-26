@@ -12,9 +12,9 @@
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
 source activate slak
 
-nohup python -m torch.distributed.launch --nproc_per_node=1 eval_knn.py --data_path /datadrive_c/imagenet/ --batch_size_per_gpu 256 \
+nohup python -m torch.distributed.launch --nproc_per_node=1 eval_knn.py --data_path /datadrive_a/TLC/imagenet/ --batch_size_per_gpu 256 \
 --arch SLaK_small --kernel_size 9 9 9 9 100  \
---pretrained_weights /datadrive_c/ssl/slak_9_bn_300_small/checkpoint.pth > ./knn_slak_small_9_bn_300.tex 2>&1 &
+--pretrained_weights /datadrive_c/ssl/swin_tiny_300/checkpoint.pth > ./knn_slak_small_9_bn_300.tex 2>&1 &
 
 
 source deactivate
