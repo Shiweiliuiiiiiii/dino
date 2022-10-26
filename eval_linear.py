@@ -113,8 +113,13 @@ def eval_linear(args):
 
     if 'swin' not in args.arch:
         linear_classifier = LinearClassifier(embed_dim, num_labels=args.num_labels)
+
     linear_classifier = linear_classifier.cuda()
     linear_classifier = nn.parallel.DistributedDataParallel(linear_classifier, device_ids=[args.gpu])
+
+
+    n_parameters = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    print("Model = %s" % str(model_without_ddp))
 
     # ============ preparing data ... ============
     val_transform = pth_transforms.Compose([
