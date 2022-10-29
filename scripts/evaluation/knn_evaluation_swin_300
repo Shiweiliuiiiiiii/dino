@@ -5,7 +5,7 @@
 #SBATCH --ntasks-per-node=1
 #SBATCH --gpus-per-node=1
 #SBATCH --gpus=1
-#SBATCH -t 0-0:59:59
+#SBATCH -t 0-10:59:59
 #SBATCH --cpus-per-task=18
 #SBATCH -o knn_swin_window_7_300_100epochs.out
 

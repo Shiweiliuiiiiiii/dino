@@ -5,7 +5,7 @@
 #SBATCH --ntasks-per-node=1
 #SBATCH --gpus-per-node=1
 #SBATCH --gpus=1
-#SBATCH -t 0-4:59:59
+#SBATCH -t 0-11:00:00
 #SBATCH --cpus-per-task=18
 #SBATCH -o knn_slak_9x9_300e_various_ckpts.out
 
