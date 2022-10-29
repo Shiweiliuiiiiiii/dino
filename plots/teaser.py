@@ -31,23 +31,26 @@ expert = 4781260 - 3730636
 
 
 # convnext with bn
-knn_perf_bn = [68.406, 68.798, 69.364, 70.324, 69.728]  # 3 5 7 9 15
-kernel_size = [27.5617, 27.6677, 27.8267, 28.0387, 28.9926]
-paras = [27.5617, 27.6677, 27.8267, 28.0387, 28.9926]
-
+knn_perf_bn = [68.406, 68.798, 69.364, 70.324]  # 3 5 7 9 15
+kernel_size = [27.5617, 27.6677, 27.8267, 28.0387]
+paras = [27.5617, 27.6677, 27.8267, 28.0387]
+txt_bn = ['3x3', '5x5', '7x7', '9x9' ]
 # convnext withtou bn
-kernel_size_nobn = [27.8267, 28.0387, 28.9926]
-knn_perf_nobn = [68.654, 69.688, 69.398] # 7 9 15
-paras_nobn = [27.8267, 28.0387, 28.9926]
+kernel_size_nobn = [27.8267, 28.0387]
+knn_perf_nobn = [68.654, 69.688] # 7 9 15
+paras_nobn = [27.8267, 28.0387]
+txt_nobn = ['7x7', '9x9' ]
 
-
-# parameter_count_moe = np.array(expert_moe) * expert + offset
-# parameter_count_rmt = np.array(expert_rmt) * expert + offset
-# parameter_count_dense = np.array(expert_dense) * expert + offset
+# including 15x15
+# convnext with bn
+# knn_perf_bn = [68.406, 68.798, 69.364, 70.324, 69.728]  # 3 5 7 9 15
+# kernel_size = [27.5617, 27.6677, 27.8267, 28.0387, 28.9926]
+# paras = [27.5617, 27.6677, 27.8267, 28.0387, 28.9926]
 #
-# parameter_count_moe = parameter_count_moe/1e7
-# parameter_count_rmt = parameter_count_rmt/1e7
-# parameter_count_dense = parameter_count_dense/1e7
+# # convnext withtou bn
+# kernel_size_nobn = [27.8267, 28.0387, 28.9926]
+# knn_perf_nobn = [68.654, 69.688, 69.398] # 7 9 15
+# paras_nobn = [27.8267, 28.0387, 28.9926]
 
 plt.grid()
 plt.rcParams['font.sans-serif'] = 'Times New Roman'
@@ -56,26 +59,28 @@ SIZE = 5
 COLOR = '#3d405b'
 MARKER = 'o'
 LABEL_FLAG = True
-for expert, para, perf in zip(paras, paras, knn_perf_bn):
+for expert, para, perf, txt in zip(paras, paras, knn_perf_bn, txt_bn):
     if LABEL_FLAG:
         plt.scatter(para, perf, marker=MARKER, s=expert*SIZE, c=COLOR)
+        plt.annotate(txt, (para+0.02, perf-0.1), fontsize=15)
     else:
         plt.scatter(para, perf, marker=MARKER, s=expert*SIZE, c=COLOR)
-    LABEL_FLAG = False
-plt.plot(paras, knn_perf_bn, c=COLOR, linestyle='dashdot', label='ConvNeXt+BN', linewidth=2)
+    # LABEL_FLAG = False
+plt.plot(paras, knn_perf_bn, c=COLOR, linestyle='dashdot', label='ConvNeXt-SSL-T', linewidth=2)
 
 
 SIZE = 5
 COLOR = '#81b29a'
 MARKER = '^'
 LABEL_FLAG = True
-for expert, para, perf in zip(paras_nobn, paras_nobn, knn_perf_nobn):
+for expert, para, perf, txt_ in zip(paras_nobn, paras_nobn, knn_perf_nobn, txt_nobn):
     if LABEL_FLAG:
         plt.scatter(para, perf, marker=MARKER, s=expert*SIZE, c=COLOR)
+        plt.annotate(txt_, (para+0.02, perf-0.1), fontsize=15)
     else:
         plt.scatter(para, perf, marker=MARKER, s=expert*SIZE, c=COLOR)
-    LABEL_FLAG = False
-plt.plot(paras_nobn, knn_perf_nobn, c=COLOR, linestyle='dashed', label='ConvNeXt', linewidth=2)
+    # LABEL_FLAG = False
+plt.plot(paras_nobn, knn_perf_nobn, c=COLOR, linestyle='dashed', label='ConvNeXt-T', linewidth=2)
 
 
 # plt.scatter(25, 58.884, marker='o', s=30, c='purple', label='ResNet-50')
@@ -84,12 +89,13 @@ plt.plot(paras_nobn, knn_perf_nobn, c=COLOR, linestyle='dashed', label='ConvNeXt
 
 plt.scatter(28, 69.712, marker='o', s=28*SIZE, c='pink', label='Swin-T')
 
-plt.xticks(paras, ['3x3', '5x5','7x7','9x9','15x15'])
+# plt.xticks(paras, ['3x3', '5x5','7x7','9x9'])
+# plt.xlim((21, 49))
 
-#
+
 FONTSIZE=15
 plt.ylabel(r'K-NN Accuracy (%)', fontsize=FONTSIZE)
-plt.xlabel(r'Kernel Size of ConvNeXt', fontsize=FONTSIZE)
+plt.xlabel(r'# Parameter Count (Millions)', fontsize=FONTSIZE)
 plt.xticks(fontsize=FONTSIZE)
 plt.yticks(fontsize=FONTSIZE)
 plt.legend(fontsize=FONTSIZE)

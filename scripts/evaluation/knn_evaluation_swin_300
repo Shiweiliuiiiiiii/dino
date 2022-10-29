@@ -1,0 +1,64 @@
+#!/bin/bash
+#SBATCH --job-name=knn_swin_window_7_300_100epochs
+#SBATCH -p gpu
+#SBATCH -N 1
+#SBATCH --ntasks-per-node=1
+#SBATCH --gpus-per-node=1
+#SBATCH --gpus=1
+#SBATCH -t 0-0:59:59
+#SBATCH --cpus-per-task=18
+#SBATCH -o knn_swin_window_7_300_100epochs.out
+
+source /home/sliu/miniconda3/etc/profile.d/conda.sh
+source activate slak
+
+
+
+python -m torch.distributed.launch --nproc_per_node=1 eval_knn.py --data_path /projects/2/managed_datasets/imagenet/ -batch_size_per_gpu 256 \
+--arch swin_tiny --pretrained_weights /projects/0/prjste21060/projects/dino/dino_swin_tiny_300/checkpoint0100.pth \
+--cfg experiments/imagenet/swin/swin_tiny_patch4_window7_224.yaml MODEL.NUM_CLASSES 0
+
+python -m torch.distributed.launch --nproc_per_node=1 eval_knn.py --data_path /projects/2/managed_datasets/imagenet/ -batch_size_per_gpu 256 \
+--arch swin_tiny --pretrained_weights /projects/0/prjste21060/projects/dino/dino_swin_tiny_300/checkpoint0120.pth \
+--cfg experiments/imagenet/swin/swin_tiny_patch4_window7_224.yaml MODEL.NUM_CLASSES 0
+
+python -m torch.distributed.launch --nproc_per_node=1 eval_knn.py --data_path /projects/2/managed_datasets/imagenet/ -batch_size_per_gpu 256 \
+--arch swin_tiny --pretrained_weights /projects/0/prjste21060/projects/dino/dino_swin_tiny_300/checkpoint0140.pth \
+--cfg experiments/imagenet/swin/swin_tiny_patch4_window7_224.yaml MODEL.NUM_CLASSES 0
+
+python -m torch.distributed.launch --nproc_per_node=1 eval_knn.py --data_path /projects/2/managed_datasets/imagenet/ -batch_size_per_gpu 256 \
+--arch swin_tiny --pretrained_weights /projects/0/prjste21060/projects/dino/dino_swin_tiny_300/checkpoint0160.pth \
+--cfg experiments/imagenet/swin/swin_tiny_patch4_window7_224.yaml MODEL.NUM_CLASSES 0
+
+python -m torch.distributed.launch --nproc_per_node=1 eval_knn.py --data_path /projects/2/managed_datasets/imagenet/ -batch_size_per_gpu 256 \
+--arch swin_tiny --pretrained_weights /projects/0/prjste21060/projects/dino/dino_swin_tiny_300/checkpoint0180.pth \
+--cfg experiments/imagenet/swin/swin_tiny_patch4_window7_224.yaml MODEL.NUM_CLASSES 0
+
+python -m torch.distributed.launch --nproc_per_node=1 eval_knn.py --data_path /projects/2/managed_datasets/imagenet/ -batch_size_per_gpu 256 \
+--arch swin_tiny --pretrained_weights /projects/0/prjste21060/projects/dino/dino_swin_tiny_300/checkpoint0200.pth \
+--cfg experiments/imagenet/swin/swin_tiny_patch4_window7_224.yaml MODEL.NUM_CLASSES 0
+
+python -m torch.distributed.launch --nproc_per_node=1 eval_knn.py --data_path /projects/2/managed_datasets/imagenet/ -batch_size_per_gpu 256 \
+--arch swin_tiny --pretrained_weights /projects/0/prjste21060/projects/dino/dino_swin_tiny_300/checkpoint0220.pth \
+--cfg experiments/imagenet/swin/swin_tiny_patch4_window7_224.yaml MODEL.NUM_CLASSES 0
+
+python -m torch.distributed.launch --nproc_per_node=1 eval_knn.py --data_path /projects/2/managed_datasets/imagenet/ -batch_size_per_gpu 256 \
+--arch swin_tiny --pretrained_weights /projects/0/prjste21060/projects/dino/dino_swin_tiny_300/checkpoint0240.pth \
+--cfg experiments/imagenet/swin/swin_tiny_patch4_window7_224.yaml MODEL.NUM_CLASSES 0
+
+python -m torch.distributed.launch --nproc_per_node=1 eval_knn.py --data_path /projects/2/managed_datasets/imagenet/ -batch_size_per_gpu 256 \
+--arch swin_tiny --pretrained_weights /projects/0/prjste21060/projects/dino/dino_swin_tiny_300/checkpoint0260.pth \
+--cfg experiments/imagenet/swin/swin_tiny_patch4_window7_224.yaml MODEL.NUM_CLASSES 0
+
+python -m torch.distributed.launch --nproc_per_node=1 eval_knn.py --data_path /projects/2/managed_datasets/imagenet/ -batch_size_per_gpu 256 \
+--arch swin_tiny --pretrained_weights /projects/0/prjste21060/projects/dino/dino_swin_tiny_300/checkpoint0280.pth \
+--cfg experiments/imagenet/swin/swin_tiny_patch4_window7_224.yaml MODEL.NUM_CLASSES 0
+
+python -m torch.distributed.launch --nproc_per_node=1 eval_knn.py --data_path /projects/2/managed_datasets/imagenet/ -batch_size_per_gpu 256 \
+--arch swin_tiny --pretrained_weights /projects/0/prjste21060/projects/dino/dino_swin_tiny_300/checkpoint.pth \
+--cfg experiments/imagenet/swin/swin_tiny_patch4_window7_224.yaml MODEL.NUM_CLASSES 0
+
+
+
+
+source deactivate
