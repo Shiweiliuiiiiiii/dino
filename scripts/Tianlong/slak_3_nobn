@@ -1,0 +1,22 @@
+#!/bin/bash
+#SBATCH --job-name=dino_slak_3_nobn
+#SBATCH -p gpu
+#SBATCH -N 1
+#SBATCH --ntasks-per-node=1
+#SBATCH --gpus-per-node=4
+#SBATCH --gpus=4
+#SBATCH -t 3-11:59:59
+#SBATCH --exclusive
+#SBATCH --cpus-per-task=72
+#SBATCH -o dino_slak_3_nobn.out
+
+source /home/sliu/miniconda3/etc/profile.d/conda.sh
+source activate LoRA
+
+CUDA_VISIBLE_DEVICES=0,1,2,3 nohup  python -m torch.distributed.launch --nproc_per_node=4 main_dino.py --bn False \
+--arch SLaK_tiny --kernel_size 3 3 3 3 100 --epochs 100 --batch_size_per_gpu 128 \
+--data_path /datadrive_c/imagenet/train  --output_dir /datadrive_c/ssl/slak_3_nobn_100/ > dino_slak_3_nobn.txt 2>&1 &
+
+
+
+source deactivate
