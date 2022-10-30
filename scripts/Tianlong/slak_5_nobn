@@ -13,8 +13,8 @@
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
 source activate LoRA
 
-CUDA_VISIBLE_DEVICES=0,1,2,3 nohup python -m torch.distributed.launch --nproc_per_node=4 main_dino.py --bn False \
---arch SLaK_tiny --kernel_size 5 5 5 5 100 --epochs 100 --batch_size_per_gpu 128 \
+nohup python -m torch.distributed.launch --nproc_per_node=8 main_dino.py --bn False \
+--arch SLaK_tiny --kernel_size 5 5 5 5 100 --epochs 100 --batch_size_per_gpu 64 \
 --data_path /datadrive_c/imagenet/train  --output_dir /datadrive_c/ssl/slak_5_nobn_100/ > dino_slak_5_nobn.txt 2>&1 &
 
 
