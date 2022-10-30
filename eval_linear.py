@@ -114,7 +114,7 @@ def eval_linear(args):
     linear_paramerter = 0
     if 'swin' not in args.arch:
         linear_classifier = LinearClassifier(embed_dim, num_labels=args.num_labels)
-        
+
     linear_paramerter = sum(p.numel() for p in linear_classifier.parameters() if p.requires_grad)
     n_parameters = sum(p.numel() for p in model.parameters() if p.requires_grad)
     print('number of params:', n_parameters + linear_paramerter)

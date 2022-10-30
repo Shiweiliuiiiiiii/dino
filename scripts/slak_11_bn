@@ -11,7 +11,7 @@
 #SBATCH -o dino_slak_11_bn.out
 
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
-source activate LoRA
+source activate slak
 
 python -m torch.distributed.launch --nproc_per_node=4 main_dino.py --bn True \
 --arch SLaK_tiny --kernel_size 11 11 11 11 100 --epochs 100 --batch_size_per_gpu 128 \
