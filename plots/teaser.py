@@ -2,7 +2,7 @@ import os
 import sys
 import numpy as np
 import matplotlib.pyplot as plt
-
+from matplotlib.patches import FancyArrowPatch
 
 
 
@@ -24,33 +24,23 @@ expert = 4781260 - 3730636
 # dense = [1.28901, 1.2361, 1.21171, 1.18986, 1.17819, 1.16041]
 
 
-# # moe = [1.17089,1.17357,1.18149,1.18956] # top-2 smoe training
-# # moe = [1.21059,1.18913,1.18494,1.18450] # top-12 smoe training
-# moe = [1.20634,1.19076,1.18907,1.18982] # top-6 smoe training
-# expert_moe = [2,4,8,16]
+# knn_perf_bn = [68.406, 68.798, 69.364, 70.324, 69.729]  # 3 5 7 9 15
+# kernel_size = [28.33, 28.43, 28.53, 28.79, 29.76]
+# paras =  [28.33, 28.43, 28.53, 28.79, 29.76]
+# txt_bn = ['3x3', '5x5', '7x7', '9x9', '15x15']
 
 
 # convnext with bn
-knn_perf_bn = [68.406, 68.798, 69.364, 70.324]  # 3 5 7 9 15
+knn_perf_bn = [68.406, 68.798, 69.364, 70.324, 69.729]  # 3 5 7 9 15
 kernel_size = [28.33, 28.43, 28.53, 28.79, 29.76]
 paras =  [28.33, 28.43, 28.53, 28.79, 29.76]
-txt_bn = ['3x3', '5x5', '7x7', '9x9' ]
-# convnext withtou bn
-kernel_size_nobn = [27.8267, 28.0387]
-knn_perf_nobn = [68.654, 69.688] # 7 9 15
-paras_nobn = [27.8267, 28.0387]
-txt_nobn = ['7x7', '9x9' ]
+txt_bn = ['3x3', '5x5', '7x7', '9x9', '15x15']
 
-# including 15x15
-# convnext with bn
-# knn_perf_bn = [68.406, 68.798, 69.364, 70.324, 69.728]  # 3 5 7 9 15
-# kernel_size = [27.5617, 27.6677, 27.8267, 28.0387, 28.9926]
-# paras = [27.5617, 27.6677, 27.8267, 28.0387, 28.9926]
-#
-# # convnext withtou bn
-# kernel_size_nobn = [27.8267, 28.0387, 28.9926]
-# knn_perf_nobn = [68.654, 69.688, 69.398] # 7 9 15
-# paras_nobn = [27.8267, 28.0387, 28.9926]
+# convnext without bn
+kernel_size_nobn = [28.53, 28.79, 29.76]
+knn_perf_nobn = [68.654, 69.688, 69.398] # 7 9 15
+paras_nobn = [28.53, 28.79, 29.76 ]
+txt_nobn = ['7x7', '9x9', '15x15']
 
 plt.grid()
 plt.rcParams['font.sans-serif'] = 'Times New Roman'
@@ -62,11 +52,11 @@ LABEL_FLAG = True
 for expert, para, perf, txt in zip(paras, paras, knn_perf_bn, txt_bn):
     if LABEL_FLAG:
         plt.scatter(para, perf, marker=MARKER, s=expert*SIZE, c=COLOR)
-        plt.annotate(txt, (para+0.02, perf-0.1), fontsize=15)
+        plt.annotate(txt, (para+0.05, perf+0.05), fontsize=15)
     else:
         plt.scatter(para, perf, marker=MARKER, s=expert*SIZE, c=COLOR)
     # LABEL_FLAG = False
-plt.plot(paras, knn_perf_bn, c=COLOR, linestyle='dashdot', label='ConvNeXt-SSL-T', linewidth=2)
+plt.plot(paras, knn_perf_bn, c=COLOR, linestyle='dashdot', label='ConvSSL-T', linewidth=2)
 
 
 SIZE = 5
@@ -76,21 +66,29 @@ LABEL_FLAG = True
 for expert, para, perf, txt_ in zip(paras_nobn, paras_nobn, knn_perf_nobn, txt_nobn):
     if LABEL_FLAG:
         plt.scatter(para, perf, marker=MARKER, s=expert*SIZE, c=COLOR)
-        plt.annotate(txt_, (para+0.02, perf-0.1), fontsize=15)
+        plt.annotate(txt_, (para+0.05, perf+0.05), fontsize=15)
     else:
         plt.scatter(para, perf, marker=MARKER, s=expert*SIZE, c=COLOR)
     # LABEL_FLAG = False
 plt.plot(paras_nobn, knn_perf_nobn, c=COLOR, linestyle='dashed', label='ConvNeXt-T', linewidth=2)
 
 
-# plt.scatter(25, 58.884, marker='o', s=30, c='purple', label='ResNet-50')
+plt.scatter(28.79, 69.118, marker='o', s=28.79*SIZE, c='purple', label='ConvNeXt-T (Rep)')
+plt.annotate('9x9', (28.79+0.05, 69.118+0.05), fontsize=15)
+# plt.scatter(32.1, 70.112, marker='o', s=32.1*SIZE, c='purple', label='ConvNeXt-T (RepLKNet)')
 
 # plt.scatter(23, 68.772, marker='o', s=30, c='blue', label='ViT-S')
 
-plt.scatter(28, 69.712, marker='o', s=28*SIZE, c='pink', label='Swin-T')
+plt.scatter(28.3, 69.712, marker='o', s=28.3*SIZE, c='pink', label='Swin-T')
 
 # plt.xticks(paras, ['3x3', '5x5','7x7','9x9'])
 # plt.xlim((21, 49))
+
+plt.arrow(28.79, 70.324, 29.0-28.79, 0, head_width=0.00, head_length=0.00, linestyle=':' ,linewidth=3, color='red', length_includes_head=True)
+plt.arrow(28.53, 68.654, 29.0-28.53, 0, head_width=0.00, head_length=0.00, linestyle=':' ,linewidth=3, color='red', length_includes_head=True)
+
+plt.arrow(29.0, 68.654, 0, 70.324-68.654, head_width=0.02, head_length=0.03, linewidth=4, color='red', length_includes_head=True)
+plt.text(29.02, 69.25, '1.67', rotation=90, fontsize=18, color='red', weight='black')
 
 
 FONTSIZE=15
@@ -98,5 +96,5 @@ plt.ylabel(r'K-NN Accuracy (%)', fontsize=FONTSIZE)
 plt.xlabel(r'# Parameter Count (Millions)', fontsize=FONTSIZE)
 plt.xticks(fontsize=FONTSIZE)
 plt.yticks(fontsize=FONTSIZE)
-plt.legend(fontsize=FONTSIZE)
+plt.legend(fontsize=12)
 plt.savefig('Teaser.pdf', bbox_inches='tight')
