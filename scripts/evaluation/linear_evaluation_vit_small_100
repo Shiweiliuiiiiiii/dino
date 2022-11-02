@@ -1,0 +1,20 @@
+#!/bin/bash
+#SBATCH --job-name=linear_vit_small_16x16_100
+#SBATCH -p gpu
+#SBATCH -N 1
+#SBATCH --ntasks-per-node=1
+#SBATCH --gpus-per-node=1
+#SBATCH --gpus=1
+#SBATCH -t 2-00:00:00
+#SBATCH --cpus-per-task=18
+#SBATCH -o linear_vit_small_16x16_100.out
+
+source /home/sliu/miniconda3/etc/profile.d/conda.sh
+source activate slak
+
+python -m torch.distributed.launch --nproc_per_node=1 --master_port=11111 eval_linear.py --data_path /projects/2/managed_datasets/imagenet/ \
+--arch vit_small --pretrained_weights /projects/0/prjste21060/projects/dino/vit_small/checkpoint.pth \
+--output_dir /projects/0/prjste21060/projects/dino/vit_small/linear/ --checkpoint_key teacher
+
+
+source deactivate
