@@ -9,9 +9,9 @@
 #SBATCH --cpus-per-task=18
 #SBATCH -o linear_slak_3x3_S_R_A_300.out
 
-source /home/sliu/miniconda3/etc/profile.d/conda.sh
+#source /home/sliu/miniconda3/etc/profile.d/conda.sh
 #source activate slak
-cd ../../
+#cd ../../
 
 ck1=/datadrive_c/ssl/110epochs/dino_slak_3_bn/checkpoint.pth
 ck2=/datadrive_c/ssl/110epochs/dino_slak_3_bn/linear/checkpoint.pth.tar
