@@ -37,7 +37,7 @@ import sys
 from timm.utils import natural_key, setup_default_logging, imagenet_r_mask
 from timm.bits import initialize_device, Tracker, Monitor, AccuracyTopK, AvgTensor
 from timm.utils import imagenetc_distortions, imagenetc_alexnet_error_rates_list
-import pdb
+
 
 
 def str2bool(v):
@@ -55,22 +55,25 @@ def str2bool(v):
         raise argparse.ArgumentTypeError('Boolean value expected.')
 def test_imagenet_c(distortion_name,
                      model,
-                     dev_env,
-                     criterion,
+                     linear_classifier,
+                     depths,
                      args,
                      transform,
                      severities=list(range(1, 6)),
                      file=sys.stdout):
     errs = []
-
     for severity in severities:
+        #if severity !=4:
+        #    continue
         valdir = os.path.join(args.data_path, distortion_name, str(severity))
         val_loader = torch.utils.data.DataLoader(
             datasets.ImageFolder(valdir, transform),
-            batch_size=256, shuffle=False,
-            num_workers=4, pin_memory=True)
+            batch_size=args.batch_size_per_gpu, shuffle=False,
+            num_workers=args.num_workers, pin_memory=True)
 
-        _, top1a, _= test(model, val_loader, dev_env, criterion, args)
+        #_, top1a, _= test(model, linear_classifier,val_loader, dev_env, criterion, args)
+        test_stats = validate_network(val_loader, model, linear_classifier, args.n_last_blocks, args.avgpool_patchtokens,depths)
+        top1a=test_stats['acc1']
         errs.append(1. - top1a / 100.)
 
     print('\n=Average', tuple(errs), file=file)
@@ -78,68 +81,63 @@ def test_imagenet_c(distortion_name,
 
 
 
-def test(model, loader, dev_env, criterion, args, valid_labels=None, real_labels=None):
-    #logger = Monitor(logger=_logger)
-    tracker = Tracker()
-    #losses = AvgTensor()
-    accuracy = AccuracyTopK(dev_env=dev_env)
+# def test(model, linear_classifier,loader, dev_env, criterion, args, valid_labels=None, real_labels=None):
+#     #logger = Monitor(logger=_logger)
+#     tracker = Tracker()
+#     #losses = AvgTensor()
+#     accuracy = AccuracyTopK(dev_env=dev_env)
 
-    model.eval()
-    num_steps = len(loader)
-    with torch.no_grad():
-        tracker.mark_iter()
-        for step_idx, (sample, target) in enumerate(loader):
-            last_step = step_idx == num_steps - 1
-            tracker.mark_iter_data_end()
+#     model.eval()
+#     num_steps = len(loader)
+#     with torch.no_grad():
+#         tracker.mark_iter()
+#         for step_idx, (sample, target) in enumerate(loader):
+#             last_step = step_idx == num_steps - 1
+#             tracker.mark_iter_data_end()
 
-            # if sample.device != dev_env.device:
-            sample = sample.to(dev_env.device)
-            target = target.to(dev_env.device)
-            # compute output
+#             # if sample.device != dev_env.device:
+#             sample = sample.to(dev_env.device)
+#             target = target.to(dev_env.device)
+#             # compute output
 
-            with dev_env.autocast():
-                output = model(sample)
+#             with dev_env.autocast():
+#                 output = model(sample)
 
-            pdb.set_trace()
+#             if args.evaluate_imagenet_r:
+#                 output = output[:, imagenet_r_mask]
 
+#             if valid_labels is not None:
+#                 output = output[:, valid_labels]
 
-            if args.evaluate_imagenet_r:
-                output = output[:, imagenet_r_mask]
+#             loss = criterion(output, target)
 
-            if valid_labels is not None:
-                output = output[:, valid_labels]
+#             if dev_env.type_xla:
+#                 dev_env.mark_step()
+#             elif dev_env.type_cuda:
+#                 dev_env.synchronize()
+#             tracker.mark_iter_step_end()
 
+#             if real_labels is not None:
+#                 real_labels.add_result(output)
+#             #losses.update(loss.detach(), sample.size(0))
+#             accuracy.update(output.detach(), target)
 
+#             tracker.mark_iter()
+#             if last_step or step_idx % args.log_freq == 0:
+#                 top1, top5 = accuracy.compute().values()
+#                 #loss_avg = losses.compute()
 
-            loss = criterion(output, target)
+#     #loss_avg = losses.compute().item()
+#     #loss_avg = losses.compute().item()
 
-            if dev_env.type_xla:
-                dev_env.mark_step()
-            elif dev_env.type_cuda:
-                dev_env.synchronize()
-            tracker.mark_iter_step_end()
+#     if real_labels is not None:
+#         # real labels mode replaces topk values at the end
+#         top1a, top5a = real_labels.get_accuracy(k=1), real_labels.get_accuracy(k=5)
+#     else:
+#         top1a, top5a = accuracy.compute().values()
+#         top1a, top5a = top1a.item(), top5a.item()
 
-            if real_labels is not None:
-                real_labels.add_result(output)
-            #losses.update(loss.detach(), sample.size(0))
-            accuracy.update(output.detach(), target)
-
-            tracker.mark_iter()
-            if last_step or step_idx % 100 == 0:
-                top1, top5 = accuracy.compute().values()
-                #loss_avg = losses.compute()
-
-    #loss_avg = losses.compute().item()
-    #loss_avg = losses.compute().item()
-
-    if real_labels is not None:
-        # real labels mode replaces topk values at the end
-        top1a, top5a = real_labels.get_accuracy(k=1), real_labels.get_accuracy(k=5)
-    else:
-        top1a, top5a = accuracy.compute().values()
-        top1a, top5a = top1a.item(), top5a.item()
-
-    return None, top1a, top5a
+#     return None, top1a, top5a
 
 
 def eval_linear(args):
@@ -217,30 +215,35 @@ def eval_linear(args):
         pth_transforms.ToTensor(),
         pth_transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)),
     ])
-    # dataset_val =ImageFolder(os.path.join(args.data_path, "val"), transform=val_transform)
-    # val_loader = torch.utils.data.DataLoader(
-    #     dataset_val,
-    #     batch_size=args.batch_size_per_gpu,
-    #     num_workers=args.num_workers,
-    #     pin_memory=True,
-    # )
-    if args.dataset=='imagenet_c':
-        dev_env = initialize_device(force_cpu=False, amp=False)
-        print("Evaluate ImageNet C")
-        # assert args.checkpoint
-        # checkpoint_dir = os.path.dirname(args.checkpoint)
-        criterion= nn.CrossEntropyLoss()
-        error_rates = []
-        with open('eval_imagenet_c.txt', 'w') as f:
-            for distortion_name in imagenetc_distortions:
-                error_rate = test_imagenet_c(distortion_name,  model, dev_env, criterion, args, val_transform, file=f)
-                error_rates.append(error_rate)
-                print(f'Distortion: {distortion_name}  | CE (unnormalized) (%): {100 * error_rate}')
-            print(f'error rates: {error_rates}', file=f, flush=True)
-            print(f'mean error rates: {np.mean(error_rates)}', file=f, flush=True)
-        return
-    elif args.evaluate:
-        utils.load_pretrained_linear_weights(linear_classifier, args.arch, args.patch_size, url=args.url)
+    if args.dataset!='imagenet_c':
+        dataset_val =ImageFolder(os.path.join(args.data_path, "val"), transform=val_transform)
+        val_loader = torch.utils.data.DataLoader(
+            dataset_val,
+            batch_size=args.batch_size_per_gpu,
+            num_workers=args.num_workers,
+            pin_memory=True,
+        )
+
+    if args.evaluate:
+        utils.load_pretrained_linear_weights(linear_classifier, args.arch, args.patch_size,url=args.url)
+        if args.dataset=='imagenet_c':
+            #dev_env = initialize_device(force_cpu=False, amp=False)
+            print("Evaluate ImageNet C")
+            assert args.output_dir
+            output_dir = os.path.dirname(args.output_dir)
+            #criterion= nn.CrossEntropyLoss()
+            error_rates = []
+            with open(os.path.join(output_dir, 'eval_imagenet_c.txt'), 'w') as f:
+                for distortion_name in imagenetc_distortions:
+                    #if distortion_name !="gaussian_noise":
+                    #    continue
+                    error_rate = test_imagenet_c(distortion_name,  model, linear_classifier, depths, args, val_transform, file=f)
+                    error_rates.append(error_rate)
+                    print(f'Distortion: {distortion_name}  | CE (unnormalized) (%): {100 * error_rate}')
+                print(f'error rates: {error_rates}', file=f, flush=True)
+                print(f'mean error rates: {np.mean(error_rates)}', file=f, flush=True)
+                print(f'mean error rates:',np.mean(error_rates))
+            return
         test_stats = validate_network(val_loader, model, linear_classifier, args.n_last_blocks, args.avgpool_patchtokens,depths)
         print(f"Accuracy of the network on the {len(dataset_val)} test images: {test_stats['acc1']:.1f}%")
         return
@@ -347,7 +350,7 @@ def train(model, linear_classifier, optimizer, loader, epoch, n, avgpool, depths
         # step
         optimizer.step()
 
-        # log 
+        # log
         torch.cuda.synchronize()
         metric_logger.update(loss=loss.item())
         metric_logger.update(lr=optimizer.param_groups[0]["lr"])
@@ -429,7 +432,7 @@ if __name__ == '__main__':
         help="""Whether ot not to concatenate the global average pooled features to the [CLS] token.
         We typically set this to False for ViT-Small and to True with ViT-Base.""")
     parser.add_argument('--arch', default='vit_small', type=str, help='Architecture')
-    parser.add_argument('--dataset', default='imagenet_c', type=str, help='Architecture')
+    parser.add_argument('--dataset', default='imagenet', type=str, help='Architecture')
     parser.add_argument('--patch_size', default=16, type=int, help='Patch resolution of the model.')
     parser.add_argument('--pretrained_weights', default='', type=str, help="Path to pretrained weights to evaluate.")
     parser.add_argument('--url', default='', type=str, help="Path to pretrained weights to evaluate.")
@@ -449,7 +452,6 @@ if __name__ == '__main__':
     parser.add_argument('--output_dir', default=".", help='Path to save logs and checkpoints')
     parser.add_argument('--num_labels', default=1000, type=int, help='Number of labels for linear classifier')
     parser.add_argument('--evaluate', dest='evaluate', action='store_true', help='evaluate model on validation set')
-    parser.add_argument('--evaluate_imagenet_r', action='store_true', help='evaluate model on validation set')
 
     # swin
     parser.add_argument('--use_dense_prediction', default=False, type=utils.bool_flag,
