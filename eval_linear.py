@@ -137,8 +137,9 @@ def eval_linear(args):
         num_workers=args.num_workers,
         pin_memory=True,
     )
+
     if args.throughput:
-        throughput(data_loader_val, model)
+        throughput(val_loader, model)
         return
     if args.evaluate:
         utils.load_pretrained_linear_weights(linear_classifier, args.arch, args.patch_size)
