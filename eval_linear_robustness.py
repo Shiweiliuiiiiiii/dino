@@ -106,9 +106,9 @@ def test(model, loader, dev_env, criterion, args, valid_labels=None, real_labels
             if valid_labels is not None:
                 output = output[:, valid_labels]
 
-            print(output.shape())
+            print(output.shape)
             pdb.set_trace()
-            
+
             loss = criterion(output, target)
 
             if dev_env.type_xla:
