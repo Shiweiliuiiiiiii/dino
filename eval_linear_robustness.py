@@ -67,7 +67,7 @@ def test_imagenet_c(distortion_name,
         valdir = os.path.join(args.data_path, distortion_name, str(severity))
         val_loader = torch.utils.data.DataLoader(
             datasets.ImageFolder(valdir, transform),
-            batch_size=args.batch_size, shuffle=False,
+            batch_size=args.batch_size_per_gpu, shuffle=False,
             num_workers=args.workers, pin_memory=True)
 
         _, top1a, _= test(model, val_loader, dev_env, criterion, args)
