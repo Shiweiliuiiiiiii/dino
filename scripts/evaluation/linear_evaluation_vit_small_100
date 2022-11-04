@@ -17,4 +17,9 @@ python -m torch.distributed.launch --nproc_per_node=1 --master_port=11111 eval_l
 --output_dir /projects/0/prjste21060/projects/dino/vit_small/linear/ --checkpoint_key teacher
 
 
+python -m torch.distributed.launch --nproc_per_node=1 --master_port=11111 eval_linear.py --data_path /projects/2/managed_datasets/imagenet/ \
+--arch vit_base --throughput  --pretrained_weights  /home/sliu/.cache/torch/hub/checkpoints/dino_vitbase16_pretrain.pth
+#--output_dir /projects/0/prjste21060/projects/dino/vit_small/linear/ --checkpoint_key teacher
+
+
 source deactivate

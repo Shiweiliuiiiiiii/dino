@@ -137,16 +137,16 @@ def eval_linear(args):
         num_workers=args.num_workers,
         pin_memory=True,
     )
-
+    if args.throughput:
+        throughput(data_loader_val, model)
+        return
     if args.evaluate:
         utils.load_pretrained_linear_weights(linear_classifier, args.arch, args.patch_size)
         test_stats = validate_network(val_loader, model, linear_classifier, args.n_last_blocks, args.avgpool_patchtokens)
         print(f"Accuracy of the network on the {len(dataset_val)} test images: {test_stats['acc1']:.1f}%")
         return
 
-    if args.throughput:
-        throughput(data_loader_val, model)
-        return
+
 
     train_transform = pth_transforms.Compose([
         pth_transforms.RandomResizedCrop(224),
