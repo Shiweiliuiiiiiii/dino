@@ -222,11 +222,11 @@ def eval_linear(args):
     if args.dataset=='imagenet_c':
         dev_env = initialize_device(force_cpu=False, amp=False)
         print("Evaluate ImageNet C")
-        assert args.checkpoint
-        checkpoint_dir = os.path.dirname(args.checkpoint)
+        # assert args.checkpoint
+        # checkpoint_dir = os.path.dirname(args.checkpoint)
         criterion= nn.CrossEntropyLoss()
         error_rates = []
-        with open(os.path.join(checkpoint_dir, 'eval_imagenet_c.txt'), 'w') as f:
+        with open('eval_imagenet_c.txt', 'w') as f:
             for distortion_name in imagenetc_distortions:
                 error_rate = test_imagenet_c(distortion_name,  model, dev_env, criterion, args, val_transform, file=f)
                 error_rates.append(error_rate)
