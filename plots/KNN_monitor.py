@@ -61,6 +61,7 @@ MARKER = 'o'
 
 plt.plot(range(len(slak_tiny_300_knn)), slak_tiny_300_knn, c=COLOR, linestyle='dashed', label='ConvSSL-T', linewidth=2)
 plt.plot(range(len(swin_tiny_300_knn)), swin_tiny_300_knn, c='#81b29a', linestyle='dashed', label='Swin-T', linewidth=2)
+plt.xticks(range(len(swin_tiny_300_knn)), ['100', '120','140','160','180', '200','220','240','260', '280','300'])
 
 FONTSIZE=15
 plt.ylabel(r'K-NN Accuracy (%)', fontsize=FONTSIZE)
