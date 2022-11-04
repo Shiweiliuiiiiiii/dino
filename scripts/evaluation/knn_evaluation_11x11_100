@@ -1,0 +1,23 @@
+#!/bin/bash
+#SBATCH --job-name=knn_slak_11x11_100e_various_ckpts
+#SBATCH -p gpu
+#SBATCH -N 1
+#SBATCH --ntasks-per-node=1
+#SBATCH --gpus-per-node=1
+#SBATCH --gpus=1
+#SBATCH -t 0-4:59:59
+#SBATCH --cpus-per-task=18
+#SBATCH -o knn_slak_11x11_100e_various_ckpts.out
+
+source /home/sliu/miniconda3/etc/profile.d/conda.sh
+source activate slak
+
+
+
+python -m torch.distributed.launch --nproc_per_node=1 eval_knn.py --data_path /projects/2/managed_datasets/imagenet/ --batch_size_per_gpu 256 \
+--arch SLaK_tiny --kernel_size 11 11 11 11 100 --LoRA False --bn True --pretrained_weights /projects/0/prjste21060/projects/dino/dino_slak_11_bn/checkpoint.pth
+
+python -m torch.distributed.launch --nproc_per_node=1 eval_knn.py --data_path /projects/2/managed_datasets/imagenet/ --batch_size_per_gpu 256 \
+--arch SLaK_tiny --kernel_size 11 11 11 11 100 --LoRA False --bn True --pretrained_weights /projects/0/prjste21060/projects/dino/dino_slak_11_bn/checkpoint0080.pth
+
+source deactivate
