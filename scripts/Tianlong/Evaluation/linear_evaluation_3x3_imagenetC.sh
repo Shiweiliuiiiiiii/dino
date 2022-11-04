@@ -13,8 +13,8 @@
 #source activate slak
 #cd ../../
 
-ck1=/datadrive_c/ssl/110epochs/dino_slak_3_bn/checkpoint.pth
-ck2=/datadrive_c/ssl/110epochs/dino_slak_3_bn/linear/checkpoint.pth.tar
+ck1=/datadrive_c/ssl/100epochs/dino_slak_3_bn/checkpoint.pth
+ck2=/datadrive_c/ssl/100epochs/dino_slak_3_bn/linear/checkpoint.pth.tar
 path=/datadrive_c/ImageNet-C/
 python -m torch.distributed.launch --nproc_per_node=1 --master_port=11111  eval_linear_robustness.py --evaluate --data_path $path --dataset imagenet_c \
 --arch SLaK_tiny --kernel_size 3 3 3 3 100 --LoRA False --bn True \
