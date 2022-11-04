@@ -369,7 +369,7 @@ if __name__ == '__main__':
     parser.add_argument('--output_dir', default=".", help='Path to save logs and checkpoints')
     parser.add_argument('--num_labels', default=1000, type=int, help='Number of labels for linear classifier')
     parser.add_argument('--evaluate', dest='evaluate', action='store_true', help='evaluate model on validation set')
-    parser.add_argument('--throughput', dest='evaluate', action='store_true', help='evaluate model on validation set')
+    parser.add_argument('--throughput',  action='store_true', help='evaluate model on validation set')
 
     # swin
     parser.add_argument('--use_dense_prediction', default=False, type=utils.bool_flag,
