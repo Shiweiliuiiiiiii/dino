@@ -120,7 +120,7 @@ def test(model, loader, dev_env, criterion, args, valid_labels=None, real_labels
             accuracy.update(output.detach(), target)
 
             tracker.mark_iter()
-            if last_step or step_idx % args.log_freq == 0:
+            if last_step or step_idx % 100 == 0:
                 top1, top5 = accuracy.compute().values()
                 #loss_avg = losses.compute()
 
