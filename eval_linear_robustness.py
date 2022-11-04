@@ -206,12 +206,12 @@ def eval_linear(args):
     linear_classifier = nn.parallel.DistributedDataParallel(linear_classifier, device_ids=[args.gpu])
 
     # ============ preparing data ... ============
-    # val_transform = pth_transforms.Compose([
-    #     pth_transforms.Resize(256, interpolation=3),
-    #     pth_transforms.CenterCrop(224),
-    #     pth_transforms.ToTensor(),
-    #     pth_transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)),
-    # ])
+    val_transform = pth_transforms.Compose([
+        pth_transforms.Resize(256, interpolation=3),
+        pth_transforms.CenterCrop(224),
+        pth_transforms.ToTensor(),
+        pth_transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)),
+    ])
     # dataset_val =ImageFolder(os.path.join(args.data_path, "val"), transform=val_transform)
     # val_loader = torch.utils.data.DataLoader(
     #     dataset_val,
