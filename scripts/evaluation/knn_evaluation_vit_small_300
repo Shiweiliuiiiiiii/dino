@@ -13,45 +13,45 @@ source /home/sliu/miniconda3/etc/profile.d/conda.sh
 source activate slak
 
 
-python -m torch.distributed.launch --nproc_per_node=1 eval_linear.py --data_path /projects/2/managed_datasets/imagenet/ \
+python -m torch.distributed.launch --nproc_per_node=1 eval_knn.py --batch_size_per_gpu 256 --data_path /projects/2/managed_datasets/imagenet/ \
 --arch vit_small --pretrained_weights  /home/sliu/project_space/dino/dino_vit_small_128_300/checkpoint0100.pth
 
 
-python -m torch.distributed.launch --nproc_per_node=1 eval_linear.py --data_path /projects/2/managed_datasets/imagenet/ \
+python -m torch.distributed.launch --nproc_per_node=1 eval_knn.py --batch_size_per_gpu 256  --data_path /projects/2/managed_datasets/imagenet/ \
 --arch vit_small --pretrained_weights  /home/sliu/project_space/dino/dino_vit_small_128_300/checkpoint0120.pth
 
 
-python -m torch.distributed.launch --nproc_per_node=1 eval_linear.py --data_path /projects/2/managed_datasets/imagenet/ \
+python -m torch.distributed.launch --nproc_per_node=1 eval_knn.py --batch_size_per_gpu 256 --data_path /projects/2/managed_datasets/imagenet/ \
 --arch vit_small --pretrained_weights  /home/sliu/project_space/dino/dino_vit_small_128_300/checkpoint0140.pth
 
 
-python -m torch.distributed.launch --nproc_per_node=1 eval_linear.py --data_path /projects/2/managed_datasets/imagenet/ \
+python -m torch.distributed.launch --nproc_per_node=1 eval_knn.py --batch_size_per_gpu 256 --data_path /projects/2/managed_datasets/imagenet/ \
 --arch vit_small --pretrained_weights  /home/sliu/project_space/dino/dino_vit_small_128_300/checkpoint0160.pth
 
 
-python -m torch.distributed.launch --nproc_per_node=1 eval_linear.py --data_path /projects/2/managed_datasets/imagenet/ \
+python -m torch.distributed.launch --nproc_per_node=1 eval_knn.py --batch_size_per_gpu 256 --data_path /projects/2/managed_datasets/imagenet/ \
 --arch vit_small --pretrained_weights  /home/sliu/project_space/dino/dino_vit_small_128_300/checkpoint0180.pth
 
 
-python -m torch.distributed.launch --nproc_per_node=1 eval_linear.py --data_path /projects/2/managed_datasets/imagenet/ \
+python -m torch.distributed.launch --nproc_per_node=1 eval_knn.py --batch_size_per_gpu 256 --data_path /projects/2/managed_datasets/imagenet/ \
 --arch vit_small --pretrained_weights  /home/sliu/project_space/dino/dino_vit_small_128_300/checkpoint0200.pth
 
 
-python -m torch.distributed.launch --nproc_per_node=1 eval_linear.py --data_path /projects/2/managed_datasets/imagenet/ \
+python -m torch.distributed.launch --nproc_per_node=1 eval_knn.py --batch_size_per_gpu 256 --data_path /projects/2/managed_datasets/imagenet/ \
 --arch vit_small --pretrained_weights  /home/sliu/project_space/dino/dino_vit_small_128_300/checkpoint0220.pth
 
 
-python -m torch.distributed.launch --nproc_per_node=1 eval_linear.py --data_path /projects/2/managed_datasets/imagenet/ \
+python -m torch.distributed.launch --nproc_per_node=1 eval_knn.py --batch_size_per_gpu 256 --data_path /projects/2/managed_datasets/imagenet/ \
 --arch vit_small --pretrained_weights  /home/sliu/project_space/dino/dino_vit_small_128_300/checkpoint0240.pth
 
 
-python -m torch.distributed.launch --nproc_per_node=1 eval_linear.py --data_path /projects/2/managed_datasets/imagenet/ \
+python -m torch.distributed.launch --nproc_per_node=1 eval_knn.py --batch_size_per_gpu 256 --data_path /projects/2/managed_datasets/imagenet/ \
 --arch vit_small --pretrained_weights  /home/sliu/project_space/dino/dino_vit_small_128_300/checkpoint0260.pth
 
-python -m torch.distributed.launch --nproc_per_node=1 eval_linear.py --data_path /projects/2/managed_datasets/imagenet/ \
+python -m torch.distributed.launch --nproc_per_node=1 eval_knn.py --batch_size_per_gpu 256 --data_path /projects/2/managed_datasets/imagenet/ \
 --arch vit_small --pretrained_weights  /home/sliu/project_space/dino/dino_vit_small_128_300/checkpoint0280.pth
 
-python -m torch.distributed.launch --nproc_per_node=1 eval_linear.py --data_path /projects/2/managed_datasets/imagenet/ \
+python -m torch.distributed.launch --nproc_per_node=1 eval_knn.py --batch_size_per_gpu 256 --data_path /projects/2/managed_datasets/imagenet/ \
 --arch vit_small --pretrained_weights  /home/sliu/project_space/dino/dino_vit_small_128_300/checkpoint.pth
 
 
