@@ -40,13 +40,13 @@ python -m torch.distributed.launch --nproc_per_node=1 --master_port=11111  eval_
 #--output_dir ./ --checkpoint_key teacher
 #
 #
-#ck1=/datadrive_c/ssl/100epochs/dino_slak_9_bn/checkpoint.pth
-#ck2=/datadrive_c/ssl/100epochs/dino_slak_9_bn/linear/checkpoint.pth.tar
-#path=/datadrive_c/Imagenet-C/
-#python -m torch.distributed.launch --nproc_per_node=1 --master_port=11114  eval_linear_robustness.py --evaluate --data_path $path --dataset imagenet_c \
-#--arch SLaK_tiny --kernel_size 9 9 9 9 100 --LoRA False --bn True \
-#--pretrained_weights $ck1 --url $ck2 \
-#--output_dir ./ --checkpoint_key teacher
+ck1=/datadrive_c/ssl/100epochs/dino_slak_9_bn/checkpoint.pth
+ck2=/datadrive_c/ssl/100epochs/dino_slak_9_bn/linear/checkpoint.pth.tar
+path=/datadrive_c/Imagenet-C/
+python -m torch.distributed.launch --nproc_per_node=1 --master_port=11114  eval_linear_robustness.py --evaluate --data_path $path --dataset imagenet_c \
+--arch SLaK_tiny --kernel_size 9 9 9 9 100 --LoRA False --bn True \
+--pretrained_weights $ck1 --url $ck2 \
+--output_dir ./ --checkpoint_key teacher
 #
 #
 #ck1=/datadrive_c/ssl/100epochs/dino_slak_15_bn/checkpoint.pth

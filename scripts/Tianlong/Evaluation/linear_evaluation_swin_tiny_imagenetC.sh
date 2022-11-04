@@ -67,15 +67,15 @@ python -m torch.distributed.launch --nproc_per_node=1 --master_port=11111  eval_
 #--output_dir ./ --checkpoint_key teacher
 #
 #
-#ck1=/datadrive_c/ssl/100epochs/dino_swin_tiny/checkpoint.pth
-#ck2=/datadrive_c/ssl/100epochs/dino_swin_tiny/linear/checkpoint.pth.tar
-#path=/datadrive_c/Imagenet-C/
-#python -m torch.distributed.launch --nproc_per_node=1 --master_port=11117  eval_linear_robustness.py --evaluate --data_path $path --dataset imagenet_c \
-#--arch swin_tiny \
-#--cfg experiments/imagenet/swin/swin_tiny_patch4_window7_224.yaml \
-#--pretrained_weights $ck1 --url $ck2 \
-#--output_dir ./ --checkpoint_key teacher \
-#--batch_size_per_gpu 256 --n_last_blocks 4 --num_labels 1000 MODEL.NUM_CLASSES 0
+ck1=/datadrive_c/ssl/100epochs/dino_swin_tiny/checkpoint.pth
+ck2=/datadrive_c/ssl/100epochs/dino_swin_tiny/linear/checkpoint.pth.tar
+path=/datadrive_c/Imagenet-C/
+python -m torch.distributed.launch --nproc_per_node=1 --master_port=11117  eval_linear_robustness.py --evaluate --data_path $path --dataset imagenet_c \
+--arch swin_tiny \
+--cfg experiments/imagenet/swin/swin_tiny_patch4_window7_224.yaml \
+--pretrained_weights $ck1 --url $ck2 \
+--output_dir ./ --checkpoint_key teacher \
+--batch_size_per_gpu 256 --n_last_blocks 4 --num_labels 1000 MODEL.NUM_CLASSES 0
 
 
 #ck1=/datadrive_c/ssl/100epochs/dino_RN50/checkpoint.pth
