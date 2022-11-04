@@ -1,0 +1,61 @@
+#!/bin/bash
+#SBATCH --job-name=knn_vit_small_300_various_ckpts
+#SBATCH -p gpu
+#SBATCH -N 1
+#SBATCH --ntasks-per-node=1
+#SBATCH --gpus-per-node=1
+#SBATCH --gpus=1
+#SBATCH -t 0-13:59:59
+#SBATCH --cpus-per-task=18
+#SBATCH -o knn_vit_small_300_various_ckpts.out
+
+source /home/sliu/miniconda3/etc/profile.d/conda.sh
+source activate slak
+
+
+python -m torch.distributed.launch --nproc_per_node=1 eval_linear.py --data_path /projects/2/managed_datasets/imagenet/ \
+--arch vit_small --pretrained_weights  /home/sliu/project_space/dino/dino_vit_small_128_300/checkpoint0100.pth
+
+
+python -m torch.distributed.launch --nproc_per_node=1 eval_linear.py --data_path /projects/2/managed_datasets/imagenet/ \
+--arch vit_small --pretrained_weights  /home/sliu/project_space/dino/dino_vit_small_128_300/checkpoint0120.pth
+
+
+python -m torch.distributed.launch --nproc_per_node=1 eval_linear.py --data_path /projects/2/managed_datasets/imagenet/ \
+--arch vit_small --pretrained_weights  /home/sliu/project_space/dino/dino_vit_small_128_300/checkpoint0140.pth
+
+
+python -m torch.distributed.launch --nproc_per_node=1 eval_linear.py --data_path /projects/2/managed_datasets/imagenet/ \
+--arch vit_small --pretrained_weights  /home/sliu/project_space/dino/dino_vit_small_128_300/checkpoint0160.pth
+
+
+python -m torch.distributed.launch --nproc_per_node=1 eval_linear.py --data_path /projects/2/managed_datasets/imagenet/ \
+--arch vit_small --pretrained_weights  /home/sliu/project_space/dino/dino_vit_small_128_300/checkpoint0180.pth
+
+
+python -m torch.distributed.launch --nproc_per_node=1 eval_linear.py --data_path /projects/2/managed_datasets/imagenet/ \
+--arch vit_small --pretrained_weights  /home/sliu/project_space/dino/dino_vit_small_128_300/checkpoint0200.pth
+
+
+python -m torch.distributed.launch --nproc_per_node=1 eval_linear.py --data_path /projects/2/managed_datasets/imagenet/ \
+--arch vit_small --pretrained_weights  /home/sliu/project_space/dino/dino_vit_small_128_300/checkpoint0220.pth
+
+
+python -m torch.distributed.launch --nproc_per_node=1 eval_linear.py --data_path /projects/2/managed_datasets/imagenet/ \
+--arch vit_small --pretrained_weights  /home/sliu/project_space/dino/dino_vit_small_128_300/checkpoint0240.pth
+
+
+python -m torch.distributed.launch --nproc_per_node=1 eval_linear.py --data_path /projects/2/managed_datasets/imagenet/ \
+--arch vit_small --pretrained_weights  /home/sliu/project_space/dino/dino_vit_small_128_300/checkpoint0260.pth
+
+python -m torch.distributed.launch --nproc_per_node=1 eval_linear.py --data_path /projects/2/managed_datasets/imagenet/ \
+--arch vit_small --pretrained_weights  /home/sliu/project_space/dino/dino_vit_small_128_300/checkpoint0280.pth
+
+python -m torch.distributed.launch --nproc_per_node=1 eval_linear.py --data_path /projects/2/managed_datasets/imagenet/ \
+--arch vit_small --pretrained_weights  /home/sliu/project_space/dino/dino_vit_small_128_300/checkpoint.pth
+
+
+
+
+
+source deactivate
