@@ -234,11 +234,11 @@ def eval_linear(args):
             print(f'error rates: {error_rates}', file=f, flush=True)
             print(f'mean error rates: {np.mean(error_rates)}', file=f, flush=True)
         return
-    elif args.evaluate:
-        utils.load_pretrained_linear_weights(linear_classifier, args.arch, args.patch_size, url=args.url)
-        test_stats = validate_network(val_loader, model, linear_classifier, args.n_last_blocks, args.avgpool_patchtokens,depths)
-        print(f"Accuracy of the network on the {len(dataset_val)} test images: {test_stats['acc1']:.1f}%")
-        return
+    # elif args.evaluate:
+    #     utils.load_pretrained_linear_weights(linear_classifier, args.arch, args.patch_size, url=args.url)
+    #     test_stats = validate_network(val_loader, model, linear_classifier, args.n_last_blocks, args.avgpool_patchtokens,depths)
+    #     print(f"Accuracy of the network on the {len(dataset_val)} test images: {test_stats['acc1']:.1f}%")
+    #     return
 
     train_transform = pth_transforms.Compose([
         pth_transforms.RandomResizedCrop(224),
