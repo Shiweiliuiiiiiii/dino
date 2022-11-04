@@ -144,6 +144,10 @@ def eval_linear(args):
         print(f"Accuracy of the network on the {len(dataset_val)} test images: {test_stats['acc1']:.1f}%")
         return
 
+    if args.throughput:
+        throughput(data_loader_val, model)
+        return
+
     train_transform = pth_transforms.Compose([
         pth_transforms.RandomResizedCrop(224),
         pth_transforms.RandomHorizontalFlip(),
@@ -211,6 +215,25 @@ def eval_linear(args):
     print("Training of the supervised linear classifier on frozen features completed.\n"
                 "Top-1 test accuracy: {acc:.1f}".format(acc=best_acc))
 
+
+@torch.no_grad()
+def throughput(data_loader, model):
+    model.eval()
+
+    for idx, (images, _) in enumerate(data_loader):
+        images = images.cuda(non_blocking=True)
+        batch_size = images.shape[0]
+        for i in range(50):
+            model(images)
+        torch.cuda.synchronize()
+        print(f"throughput averaged with 30 times")
+        tic1 = time.time()
+        for i in range(30):
+            model(images)
+        torch.cuda.synchronize()
+        tic2 = time.time()
+        print(f"batch_size {batch_size} throughput {30 * batch_size / (tic2 - tic1)}")
+        return
 
 def train(model, linear_classifier, optimizer, loader, epoch, n, avgpool, depths):
     linear_classifier.train()
@@ -346,6 +369,7 @@ if __name__ == '__main__':
     parser.add_argument('--output_dir', default=".", help='Path to save logs and checkpoints')
     parser.add_argument('--num_labels', default=1000, type=int, help='Number of labels for linear classifier')
     parser.add_argument('--evaluate', dest='evaluate', action='store_true', help='evaluate model on validation set')
+    parser.add_argument('--throughput', dest='evaluate', action='store_true', help='evaluate model on validation set')
 
     # swin
     parser.add_argument('--use_dense_prediction', default=False, type=utils.bool_flag,
