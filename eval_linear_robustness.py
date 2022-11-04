@@ -100,14 +100,16 @@ def test(model, loader, dev_env, criterion, args, valid_labels=None, real_labels
             with dev_env.autocast():
                 output = model(sample)
 
+            pdb.set_trace()
+
+            
             if args.evaluate_imagenet_r:
                 output = output[:, imagenet_r_mask]
 
             if valid_labels is not None:
                 output = output[:, valid_labels]
 
-            print(output.shape)
-            pdb.set_trace()
+
 
             loss = criterion(output, target)
 
