@@ -127,7 +127,7 @@ def load_pretrained_linear_weights(linear_classifier, model_name, patch_size,url
             url = "dino_resnet50_pretrain/dino_resnet50_linearweights.pth"
     if url is not None:
         print("We load the reference pretrained linear weights.")
-        state_dict = torch.load("/projects/0/prjste21060/projects/dino/" + url)["state_dict"]
+        state_dict = torch.load(url)["state_dict"]
         linear_classifier.load_state_dict(state_dict, strict=True)
     else:
         print("We use random linear weights.")
