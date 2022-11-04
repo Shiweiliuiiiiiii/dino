@@ -37,7 +37,7 @@ import sys
 from timm.utils import natural_key, setup_default_logging, imagenet_r_mask
 from timm.bits import initialize_device, Tracker, Monitor, AccuracyTopK, AvgTensor
 from timm.utils import imagenetc_distortions, imagenetc_alexnet_error_rates_list
-
+import pdb
 
 
 def str2bool(v):
@@ -106,6 +106,9 @@ def test(model, loader, dev_env, criterion, args, valid_labels=None, real_labels
             if valid_labels is not None:
                 output = output[:, valid_labels]
 
+            print(output.shape())
+            pdb.set_trace()
+            
             loss = criterion(output, target)
 
             if dev_env.type_xla:
