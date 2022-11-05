@@ -18,7 +18,7 @@ ck1=/datadrive_c/ssl/100epochs/dino_vit_small/checkpoint.pth
 ck2=/datadrive_c/ssl/100epochs/dino_vit_small/linear/checkpoint.pth.tar
 path=/datadrive_c/Imagenet-C/
 python -m torch.distributed.launch --nproc_per_node=1 --master_port=11111 eval_linear_robustness.py --evaluate --data_path $path --dataset imagenet_c \
---arch vit_base --pretrained_weights $ck1 --url $ck2  --output_dir ./ --checkpoint_key teacher \
+--arch vit_small --pretrained_weights $ck1 --url $ck2  --output_dir ./ --checkpoint_key teacher \
 
 
 
