@@ -9,6 +9,7 @@ from matplotlib.patches import FancyArrowPatch
 # convnext with bn
 slak_tiny_300_knn = [72.378, 73.028, 73.532, 73.947, 74.432, 75.046, 75.346, 75.704, 75.71, 75.334, 75.128]
 swin_tiny_300_knn = [70.398, 70.924, 71.248, 71.752, 72.276, 72.782, 73.550, 73.944, 74.022, 73.812, 73.752]
+VIT_small_300_knn = [68.876, 69.322, 69.636, 70.004, 70.326, 71.182, 71.834, 72.492, 73.122, 73.438, 74.408]
 
 
 plt.grid()
@@ -59,8 +60,9 @@ MARKER = 'o'
 # plt.arrow(29.0, 68.654, 0, 70.324-68.654, head_width=0.02, head_length=0.03, linewidth=4, color='red', length_includes_head=True)
 # plt.text(29.02, 69.25, '1.67', rotation=90, fontsize=18, color='red', weight='black')
 
-plt.plot(range(len(slak_tiny_300_knn)), slak_tiny_300_knn, c=COLOR, linestyle='dashed', label='ConvSSL-T', linewidth=2)
+plt.plot(range(len(slak_tiny_300_knn)), slak_tiny_300_knn, c='orange', linestyle='dashed', label='ConvSSL-T', linewidth=2)
 plt.plot(range(len(swin_tiny_300_knn)), swin_tiny_300_knn, c='#81b29a', linestyle='dashed', label='Swin-T', linewidth=2)
+plt.plot(range(len(VIT_small_300_knn)), VIT_small_300_knn, c=COLOR, linestyle='dashed', label='ViT-S', linewidth=2)
 plt.xticks(range(len(swin_tiny_300_knn)), ['100', '120','140','160','180', '200','220','240','260', '280','300'])
 
 FONTSIZE=15
