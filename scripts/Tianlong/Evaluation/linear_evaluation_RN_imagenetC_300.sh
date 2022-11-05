@@ -78,8 +78,8 @@
 #--batch_size_per_gpu 256 --n_last_blocks 4 --num_labels 1000 MODEL.NUM_CLASSES 0
 
 
-ck1=/datadrive_c/ssl/300epochs/dino_RN50/checkpoint.pth
-ck2=/datadrive_c/ssl/300epochs/dino_RN50/linear/checkpoint.pth.tar
+ck1=/datadrive_c/ssl/300epochs/dino_RN50/dino_RN50/checkpoint.pth
+ck2=/datadrive_c/ssl/300epochs/dino_RN50/dino_RN50/linear/checkpoint.pth.tar
 path=/datadrive_c/Imagenet-C/
 python -m torch.distributed.launch --nproc_per_node=1 --master_port=11117  eval_linear_robustness.py --evaluate --data_path $path --dataset imagenet_c \
 --arch resnet50 \
