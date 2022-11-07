@@ -5,21 +5,16 @@
 #SBATCH --ntasks-per-node=1
 #SBATCH --gpus-per-node=1
 #SBATCH --gpus=1
-#SBATCH -t 2-00:00:00
+#SBATCH -t 1-00:00:00
 #SBATCH --cpus-per-task=18
 #SBATCH -o linear_vit_small_16x16_100.out
 
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
 source activate slak
 
-python -m torch.distributed.launch --nproc_per_node=1 --master_port=11111 eval_linear.py --data_path /projects/2/managed_datasets/imagenet/ \
---arch vit_small --pretrained_weights /projects/0/prjste21060/projects/dino/vit_small/checkpoint.pth \
+python -m torch.distributed.launch --nproc_per_node=2 --master_port=11111 eval_linear.py --data_path /projects/2/managed_datasets/imagenet/ \
+--arch vit_small --pretrained_weights /projects/0/prjste21060/projects/dino/vit_small/checkpoint0080.pth \
 --output_dir /projects/0/prjste21060/projects/dino/vit_small/linear/ --checkpoint_key teacher
-
-
-python -m torch.distributed.launch --nproc_per_node=1 --master_port=11111 eval_linear.py --data_path /projects/2/managed_datasets/imagenet/ \
---arch vit_base --throughput  --pretrained_weights  /home/sliu/.cache/torch/hub/checkpoints/dino_vitbase16_pretrain.pth
-#--output_dir /projects/0/prjste21060/projects/dino/vit_small/linear/ --checkpoint_key teacher
 
 
 source deactivate
