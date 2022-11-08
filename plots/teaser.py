@@ -75,6 +75,9 @@ plt.plot(paras_nobn, knn_perf_nobn, c=COLOR, linestyle='dashed', label='ConvNeXt
 
 plt.scatter(28.79, 69.118, marker='o', s=28.79*SIZE, c='purple', label='ConvNeXt-T (Rep)')
 plt.annotate('9x9', (28.79+0.05, 69.118+0.05), fontsize=15)
+
+# plt.scatter(32, 70.112, marker='o', s=28.79*SIZE, c='purple', label='ConvNeXt-T (Rep)')
+# plt.annotate('31x31', (32+0.05, 70.112+0.05), fontsize=15)
 # plt.scatter(32.1, 70.112, marker='o', s=32.1*SIZE, c='purple', label='ConvNeXt-T (RepLKNet)')
 
 # plt.scatter(23, 68.772, marker='o', s=30, c='blue', label='ViT-S')
