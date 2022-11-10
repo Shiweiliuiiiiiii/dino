@@ -31,7 +31,7 @@ from models import build_model
 from config import config
 from config import update_config
 from folder import ImageFolder
-import models.SLaK
+# import models.SLaK
 import numpy as np
 import sys
 from timm.utils import natural_key, setup_default_logging, imagenet_r_mask
