@@ -60,15 +60,15 @@ MARKER = 'o'
 # plt.arrow(29.0, 68.654, 0, 70.324-68.654, head_width=0.02, head_length=0.03, linewidth=4, color='red', length_includes_head=True)
 # plt.text(29.02, 69.25, '1.67', rotation=90, fontsize=18, color='red', weight='black')
 
-plt.plot(range(len(slak_tiny_300_knn)), slak_tiny_300_knn, c='orange', linestyle='dashed', label='ConvSSL-T', linewidth=2)
-plt.plot(range(len(swin_tiny_300_knn)), swin_tiny_300_knn, c='#81b29a', linestyle='dashed', label='Swin-T', linewidth=2)
-plt.plot(range(len(VIT_small_300_knn)), VIT_small_300_knn, c=COLOR, linestyle='dashed', label='ViT-S', linewidth=2)
+plt.plot(range(len(slak_tiny_300_knn)), slak_tiny_300_knn, c='orange', linestyle='dashed', label='BC-SSL-T', linewidth=2, marker = 'o', markersize=10)
+plt.plot(range(len(swin_tiny_300_knn)), swin_tiny_300_knn, c='#81b29a', linestyle='dashed', label='Swin-T', linewidth=2, marker = 'o', markersize=10)
+plt.plot(range(len(VIT_small_300_knn)), VIT_small_300_knn, c=COLOR, linestyle='dashed', label='ViT-S', linewidth=2, marker = 'o', markersize=10)
 plt.xticks(range(len(swin_tiny_300_knn)), ['100', '120','140','160','180', '200','220','240','260', '280','300'])
 
 FONTSIZE=15
 plt.ylabel(r'K-NN Accuracy (%)', fontsize=FONTSIZE)
-plt.xlabel(r'# Parameter Count (Millions)', fontsize=FONTSIZE)
+plt.xlabel(r'Training epochs', fontsize=FONTSIZE)
 plt.xticks(fontsize=FONTSIZE)
 plt.yticks(fontsize=FONTSIZE)
-plt.legend(fontsize=12)
+plt.legend(fontsize=15)
 plt.savefig('KNN_monitor.pdf', bbox_inches='tight')

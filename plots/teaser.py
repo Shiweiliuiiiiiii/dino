@@ -51,12 +51,12 @@ MARKER = 'o'
 LABEL_FLAG = True
 for expert, para, perf, txt in zip(paras, paras, knn_perf_bn, txt_bn):
     if LABEL_FLAG:
-        plt.scatter(para, perf, marker=MARKER, s=expert*SIZE, c=COLOR)
+        plt.scatter(para, perf, marker=MARKER, s=expert*SIZE, c='orange')
         plt.annotate(txt, (para+0.05, perf+0.05), fontsize=15)
     else:
-        plt.scatter(para, perf, marker=MARKER, s=expert*SIZE, c=COLOR)
+        plt.scatter(para, perf, marker=MARKER, s=expert*SIZE, c='orange')
     # LABEL_FLAG = False
-plt.plot(paras, knn_perf_bn, c=COLOR, linestyle='dashdot', label='ConvSSL-T', linewidth=2)
+plt.plot(paras, knn_perf_bn, c='orange', linestyle='dashdot', label='BC-SSL-T', linewidth=2)
 
 
 SIZE = 5
@@ -73,8 +73,8 @@ for expert, para, perf, txt_ in zip(paras_nobn, paras_nobn, knn_perf_nobn, txt_n
 plt.plot(paras_nobn, knn_perf_nobn, c=COLOR, linestyle='dashed', label='ConvNeXt-T', linewidth=2)
 
 
-plt.scatter(28.79, 69.118, marker='o', s=28.79*SIZE, c='purple', label='ConvNeXt-T (Rep)')
-plt.annotate('9x9', (28.79+0.05, 69.118+0.05), fontsize=15)
+# plt.scatter(28.79, 69.118, marker='o', s=28.79*SIZE, c='purple', label='ConvNeXt-T (Rep)')
+# plt.annotate('9x9', (28.79+0.05, 69.118+0.05), fontsize=15)
 
 # plt.scatter(32, 70.112, marker='o', s=28.79*SIZE, c='purple', label='ConvNeXt-T (Rep)')
 # plt.annotate('31x31', (32+0.05, 70.112+0.05), fontsize=15)
