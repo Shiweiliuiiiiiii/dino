@@ -13,9 +13,9 @@
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
 source activate slak
 
-python -m torch.distributed.launch --nproc_per_node=4 main_dino.py --bn True --teacher_temp 0.07 --warmup_teacher_temp_epochs 30 --norm_last_layer false  \
---arch SLaK_tiny --kernel_size 9 9 9 9 100 --epochs 300 --batch_size_per_gpu 128 \
---data_path /projects/2/managed_datasets/imagenet/train --output_dir /projects/0/prjste21060/projects/dino/dino_slak_9_bn_300/
+python -m torch.distributed.launch --nproc_per_node=1 main_dino.py --bn True --teacher_temp 0.07 --warmup_teacher_temp_epochs 30 --norm_last_layer false  \
+--arch BC_SSL_tiny --kernel_size 9 9 9 9 100 --epochs 300 --batch_size_per_gpu 128 \
+--data_path /projects/2/managed_datasets/imagenet/train --output_dir /projects/0/prjste21060/projects/dino/github/
 
 
 source deactivate
