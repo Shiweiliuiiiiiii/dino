@@ -1,0 +1,21 @@
+#!/bin/bash
+#SBATCH --job-name=linear_slak_9x9_bn_300_260
+#SBATCH -p gpu
+#SBATCH -N 1
+#SBATCH --ntasks-per-node=2
+#SBATCH --gpus-per-node=2
+#SBATCH --gpus=1
+#SBATCH -t 2-00:00:00
+#SBATCH --cpus-per-task=18
+#SBATCH -o linear_slak_9x9_bn_300_260.out
+
+source /home/sliu/miniconda3/etc/profile.d/conda.sh
+source activate slak
+
+
+python -m torch.distributed.launch --nproc_per_node=2 --master_port=12222  eval_linear.py --data_path /projects/2/managed_datasets/imagenet/ \
+--arch SLaK_tiny --kernel_size 9 9 9 9 100 --LoRA False --bn True  --batch_size_per_gpu 256  \
+--pretrained_weights /projects/0/prjste21060/projects/dino/dino_slak_small_9_bn_300_bn64/checkpoint0260.pth \
+--output_dir /projects/0/prjste21060/projects/dino/dino_slak_small_9_bn_300_bn64/linear_0260/ --checkpoint_key teacher
+
+source deactivate
